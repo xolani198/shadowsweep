@@ -8,7 +8,13 @@
       "Bash(node -e \"require\\('tailwindcss'\\)\")",
       "Bash(npx playwright *)",
       "Bash(curl -s http://localhost:3000)",
-      "Bash(bash init-git.sh)"
+      "Bash(bash init-git.sh)",
+      "Bash(git branch *)",
+      "Bash(git push *)",
+      "Bash(gh repo *)",
+      "Bash(git checkout *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
     ]
   }
 }
