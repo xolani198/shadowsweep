@@ -14,7 +14,8 @@
       "Bash(gh repo *)",
       "Bash(git checkout *)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(gh pr create --title 'feat: alerts page, settings page, UI polish & Playwright tests' --body ' *)"
     ]
   }
 }

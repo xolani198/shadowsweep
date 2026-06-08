@@ -220,7 +220,7 @@ export default function EmployeeProfilePage() {
         <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--color-accent)] text-white text-[22px] font-extrabold shadow-purple-glow">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--color-accent)] text-white text-[22px] font-extrabold ">
                 {employee.avatar}
               </div>
               <div>
@@ -281,7 +281,7 @@ export default function EmployeeProfilePage() {
                 className={`flex-shrink-0 inline-flex items-center gap-2 rounded-xl px-6 py-3 text-[14px] font-extrabold text-white transition-all ${
                   revokeStatus === "running"
                     ? "bg-purple-400 cursor-not-allowed"
-                    : "bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] shadow-purple-glow hover:shadow-purple-glow"
+                    : "bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] shadow-sky-glow hover:shadow-sky-glow"
                 }`}
               >
                 {revokeStatus === "running" ? (

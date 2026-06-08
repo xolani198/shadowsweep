@@ -28,7 +28,7 @@ export default function AuthPage() {
       <div className="w-full max-w-[380px] rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-8 shadow-card dark:shadow-card-dark">
         {/* Logo */}
         <div className="mb-6 flex flex-col items-center gap-3 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--color-accent)] shadow-purple-glow-sm">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--color-accent)]">
             <Shield size={22} className="text-white" />
           </div>
           <div>
@@ -52,7 +52,7 @@ export default function AuthPage() {
         <button
           onClick={() => handleSignIn("google")}
           disabled={loading !== null}
-          className="mb-3 flex w-full items-center justify-center gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] py-2.5 text-[13.5px] font-semibold text-[var(--color-text-primary)] transition hover:border-[var(--color-accent)] hover:shadow-purple-glow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+          className="mb-3 flex w-full items-center justify-center gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] py-2.5 text-[13.5px] font-semibold text-[var(--color-text-primary)] transition hover:border-[var(--color-accent)] disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {loading === "google" ? (
             <svg className="h-5 w-5 animate-spin text-[var(--color-accent)]" viewBox="0 0 24 24" fill="none">
@@ -74,7 +74,7 @@ export default function AuthPage() {
         <button
           onClick={() => handleSignIn("microsoft")}
           disabled={loading !== null}
-          className="flex w-full items-center justify-center gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] py-2.5 text-[13.5px] font-semibold text-[var(--color-text-primary)] transition hover:border-[var(--color-accent)] hover:shadow-purple-glow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+          className="flex w-full items-center justify-center gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] py-2.5 text-[13.5px] font-semibold text-[var(--color-text-primary)] transition hover:border-[var(--color-accent)] disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {loading === "microsoft" ? (
             <svg className="h-5 w-5 animate-spin text-[var(--color-accent)]" viewBox="0 0 24 24" fill="none">
