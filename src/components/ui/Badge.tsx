@@ -2,15 +2,15 @@ import React from "react";
 
 type Variant = "low" | "medium" | "high" | "critical" | "info" | "success" | "neutral";
 
-/* Navy-toned badge palette — crisper, less generic than the default Tailwind colors */
+/* Muted enterprise semantics — thin border, restrained tint */
 const STYLES: Record<Variant, string> = {
-  low:      "bg-emerald-50  text-emerald-700  border border-emerald-200  dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800/50",
-  medium:   "bg-amber-50    text-amber-700    border border-amber-200    dark:bg-amber-950/40   dark:text-amber-400   dark:border-amber-800/50",
-  high:     "bg-orange-50   text-orange-700   border border-orange-200   dark:bg-orange-950/40  dark:text-orange-400  dark:border-orange-800/50",
-  critical: "bg-red-50      text-red-700      border border-red-200      dark:bg-red-950/40     dark:text-red-400     dark:border-red-800/50",
-  info:     "bg-sky-50      text-sky-700      border border-sky-200      dark:bg-sky-950/40     dark:text-sky-400     dark:border-sky-800/50",
-  success:  "bg-emerald-50  text-emerald-700  border border-emerald-200  dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800/50",
-  neutral:  "bg-slate-100   text-slate-600    border border-slate-200    dark:bg-slate-800/40   dark:text-slate-400   dark:border-slate-700/50",
+  low:      "bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900",
+  medium:   "bg-amber-50   text-amber-800   border-amber-200   dark:bg-amber-950/30   dark:text-amber-400   dark:border-amber-900",
+  high:     "bg-orange-50  text-orange-800  border-orange-200  dark:bg-orange-950/30  dark:text-orange-400  dark:border-orange-900",
+  critical: "bg-red-50     text-red-800     border-red-200     dark:bg-red-950/30     dark:text-red-400     dark:border-red-900",
+  info:     "bg-[var(--color-accent-subtle)] text-[var(--color-accent)] border-[var(--color-accent-muted)]",
+  success:  "bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900",
+  neutral:  "bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border-[var(--color-border)]",
 };
 
 interface BadgeProps {
@@ -22,7 +22,7 @@ interface BadgeProps {
 export default function Badge({ variant = "neutral", children, className = "" }: BadgeProps) {
   return (
     <span
-      className={`inline-flex items-center rounded-md px-2 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide ${STYLES[variant]} ${className}`}
+      className={`inline-flex items-center rounded border px-1.5 py-px text-[10px] font-semibold uppercase tracking-[0.06em] ${STYLES[variant]} ${className}`}
     >
       {children}
     </span>

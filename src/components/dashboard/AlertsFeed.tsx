@@ -32,14 +32,14 @@ const TYPE_ICONS: Record<Alert["type"], React.ElementType> = {
 
 const SEV_STYLES: Record<Alert["severity"], string> = {
   critical: "border-l-[var(--color-danger)]",
-  warning:  "border-l-yellow-400",
-  info:     "border-l-blue-400",
+  warning:  "border-l-[var(--color-warning)]",
+  info:     "border-l-[var(--color-accent)]",
 };
 
 const SEV_ICON_COLOR: Record<Alert["severity"], string> = {
   critical: "text-[var(--color-danger)]",
-  warning:  "text-yellow-500",
-  info:     "text-blue-500",
+  warning:  "text-[var(--color-warning)]",
+  info:     "text-[var(--color-accent)]",
 };
 
 export default function AlertsFeed() {
@@ -81,7 +81,7 @@ export default function AlertsFeed() {
           return (
             <li
               key={alert.id}
-              className={`flex items-start gap-4 border-l-4 px-5 py-4 transition ${SEV_STYLES[alert.severity]} ${
+              className={`flex items-start gap-4 border-l-2 px-5 py-4 transition ${SEV_STYLES[alert.severity]} ${
                 alert.read ? "opacity-50" : ""
               }`}
             >

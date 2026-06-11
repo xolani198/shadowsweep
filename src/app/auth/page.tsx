@@ -25,7 +25,7 @@ export default function AuthPage() {
       </div>
 
       {/* Card */}
-      <div className="w-full max-w-[380px] rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-8 shadow-card dark:shadow-card-dark">
+      <div className="w-full max-w-[380px] rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-8 shadow-sm">
         {/* Logo */}
         <div className="mb-6 flex flex-col items-center gap-3 text-center">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--color-accent)]">

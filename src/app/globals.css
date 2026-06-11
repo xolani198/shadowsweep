@@ -1,72 +1,72 @@
 /* FILE: src/app/globals.css */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ── Light Mode (Navy + White) ─────────────────────────────────────────── */
+/* ── Light mode — crisp white canvas, deep navy structure ─────────────── */
 :root {
-  --color-bg:            #F0F4F8;
+  --color-bg:            #FFFFFF;
   --color-surface:       #FFFFFF;
-  --color-surface-2:     #F8FAFC;
-  --color-border:        #CBD5E1;
-  --color-border-subtle: #E2E8F0;
+  --color-surface-2:     #F6F8FB;
+  --color-border:        #E2E8F2;
+  --color-border-strong: #C9D5E5;
 
-  --color-text-primary:   #0A1929;
-  --color-text-secondary: #334155;
-  --color-text-muted:     #64748B;
+  --color-text-primary:   #0B1F3A;
+  --color-text-secondary: #3D5573;
+  --color-text-muted:     #7186A0;
 
-  /* Accent: sky blue */
-  --color-accent:        #0284C7;
-  --color-accent-hover:  #0369A1;
-  --color-accent-subtle: #E0F2FE;
-  --color-accent-muted:  #BAE6FD;
+  /* Tertiary: mid-to-dark blue for interactive elements */
+  --color-accent:        #15498C;
+  --color-accent-hover:  #0E3568;
+  --color-accent-subtle: #EEF4FB;
+  --color-accent-muted:  #CBDDF2;
 
-  /* Semantic */
-  --color-danger:  #DC2626;
-  --color-warning: #D97706;
-  --color-success: #059669;
+  /* Muted enterprise semantics */
+  --color-danger:  #B42318;
+  --color-warning: #B54708;
+  --color-success: #067647;
 
-  /* Sidebar is ALWAYS navy — does not swap with theme */
-  --color-nav-bg:          #0A1929;
-  --color-nav-surface:     #0F2D52;
-  --color-nav-border:      #1E3A5F;
-  --color-nav-text:        #94A3B8;
-  --color-nav-text-active: #F0F9FF;
-  --color-nav-accent:      #38BDF8;
+  /* Structural navy — sidebar, hero, footer; constant across themes */
+  --color-nav-bg:          #081A33;
+  --color-nav-surface:     #0D2547;
+  --color-nav-border:      #16325A;
+  --color-nav-text:        #8CA3C4;
+  --color-nav-text-active: #FFFFFF;
+  --color-nav-accent:      #6C9BD8;
 }
 
-/* ── Dark Mode ─────────────────────────────────────────────────────────── */
+/* ── Dark mode — deep navy canvas, no neon ─────────────────────────────── */
 .dark {
-  --color-bg:            #070F1C;
-  --color-surface:       #0D1F3C;
-  --color-surface-2:     #0A1929;
-  --color-border:        #1E3A5F;
-  --color-border-subtle: #152E4D;
+  --color-bg:            #0A1626;
+  --color-surface:       #0E1E33;
+  --color-surface-2:     #0B1A2D;
+  --color-border:        #1F3554;
+  --color-border-strong: #2B4569;
 
-  --color-text-primary:   #F0F9FF;
-  --color-text-secondary: #94A3B8;
-  --color-text-muted:     #4D7A9E;
+  --color-text-primary:   #EDF2F9;
+  --color-text-secondary: #A4B6CE;
+  --color-text-muted:     #6E84A6;
 
-  --color-accent:        #38BDF8;
-  --color-accent-hover:  #7DD3FC;
-  --color-accent-subtle: #082F49;
-  --color-accent-muted:  #075985;
+  --color-accent:        #6C9BD8;
+  --color-accent-hover:  #8FB4E4;
+  --color-accent-subtle: #122B4D;
+  --color-accent-muted:  #1B3A66;
 
-  --color-danger:  #F87171;
-  --color-warning: #FCD34D;
-  --color-success: #34D399;
+  --color-danger:  #E5746C;
+  --color-warning: #DFA64C;
+  --color-success: #3FA97C;
 
-  --color-nav-bg:          #040C18;
-  --color-nav-surface:     #0A1929;
-  --color-nav-border:      #1E3A5F;
-  --color-nav-text:        #64748B;
-  --color-nav-text-active: #F0F9FF;
-  --color-nav-accent:      #38BDF8;
+  --color-nav-bg:          #060F1E;
+  --color-nav-surface:     #0B1A2D;
+  --color-nav-border:      #16325A;
+  --color-nav-text:        #7186A0;
+  --color-nav-text-active: #FFFFFF;
+  --color-nav-accent:      #6C9BD8;
 }
 
-/* ── Base reset ─────────────────────────────────────────────────────────── */
+/* ── Base ──────────────────────────────────────────────────────────────── */
 * {
   box-sizing: border-box;
   padding: 0;
@@ -84,30 +84,64 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Mono utility ────────────────────────────────────────────────────────── */
+::selection {
+  background: var(--color-accent);
+  color: #FFFFFF;
+}
+
+/* ── Data typography ───────────────────────────────────────────────────── */
 .font-mono-data {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-feature-settings: 'tnum' on, 'lnum' on;
   letter-spacing: -0.02em;
 }
 
-/* ── Scrollbar ───────────────────────────────────────────────────────────── */
+/* Uppercase micro-label used for section headers and table column heads */
+.micro-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
+/* ── Sidebar nav items (sidebar is always navy) ────────────────────────── */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-nav-text);
+  transition: color 0.12s ease, background-color 0.12s ease;
+}
+.nav-item:hover {
+  color: var(--color-nav-text-active);
+  background: rgba(255, 255, 255, 0.04);
+}
+.nav-item-active,
+.nav-item-active:hover {
+  color: var(--color-nav-text-active);
+  background: rgba(108, 155, 216, 0.12);
+  box-shadow: inset 2px 0 0 var(--color-nav-accent);
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 2px;
-}
+::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 2px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
 
-/* ── Focus ring ──────────────────────────────────────────────────────────── */
+/* ── Focus ring ────────────────────────────────────────────────────────── */
 *:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* ── Skeleton shimmer ────────────────────────────────────────────────────── */
+/* ── Skeleton shimmer ──────────────────────────────────────────────────── */
 @keyframes shimmer {
   0%   { background-position: -200% 0; }
   100% { background-position: 200% 0; }
@@ -121,59 +155,19 @@ html, body {
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite linear;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
-/* ── Step pulse (revoke animation) ──────────────────────────────────────── */
+/* ── Step pulse (revoke animation) ─────────────────────────────────────── */
 @keyframes stepPulse {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.4; }
 }
 .step-active { animation: stepPulse 1s ease-in-out infinite; }
 
-/* ── Dot-grid texture (used on landing hero) ─────────────────────────────── */
-.dot-grid {
-  background-image: radial-gradient(circle, rgba(56,189,248,0.18) 1px, transparent 1px);
-  background-size: 28px 28px;
-}
-
-/* ── Diagonal stripe accent ─────────────────────────────────────────────── */
-.stripe-accent {
-  background-image: repeating-linear-gradient(
-    -45deg,
-    transparent,
-    transparent 8px,
-    rgba(56,189,248,0.06) 8px,
-    rgba(56,189,248,0.06) 9px
-  );
-}
-
-/* ── Navy sidebar active glow ────────────────────────────────────────────── */
-.nav-active-glow {
-  box-shadow: inset 3px 0 0 #38BDF8;
-}
-
-/* ── Metric card accent line ─────────────────────────────────────────────── */
-.metric-accent-line::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  border-radius: 12px 12px 0 0;
-}
-.metric-accent-sky::before   { background: #38BDF8; }
-.metric-accent-red::before   { background: #F87171; }
-.metric-accent-amber::before { background: #FCD34D; }
-.metric-accent-green::before { background: #34D399; }
-
-/* ── Custom table row hover ──────────────────────────────────────────────── */
-.table-row-hover:hover {
-  background-color: var(--color-accent-subtle);
-}
-
-/* ── Toast slide-in ──────────────────────────────────────────────────────── */
+/* ── Toast ─────────────────────────────────────────────────────────────── */
 @keyframes toastIn {
-  from { transform: translateY(16px); opacity: 0; }
+  from { transform: translateY(12px); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }
 }
-.toast-enter { animation: toastIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
+.toast-enter { animation: toastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }

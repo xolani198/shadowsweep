@@ -10,27 +10,24 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        /* Navy palette */
+        /* Secondary: deep navy — structural elements and primary text */
         navy: {
-          950: "#040C18",
-          900: "#070F1C",
-          800: "#0A1929",
-          700: "#0D1F3C",
-          600: "#0F2D52",
-          500: "#1A3F6F",
-          400: "#1E5799",
-          300: "#2B6CB0",
+          950: "#050F1F",
+          900: "#081A33",
+          800: "#0D2547",
+          700: "#122E59",
+          600: "#16325A",
+          500: "#1B3A66",
         },
-        /* Sky accent */
-        sky: {
-          950: "#082F49",
-          900: "#0C4A6E",
-          600: "#0284C7",
-          500: "#0EA5E9",
-          400: "#38BDF8",
-          300: "#7DD3FC",
-          100: "#E0F2FE",
-          50:  "#F0F9FF",
+        /* Tertiary: mid-to-dark blue — interactive elements and accents */
+        blue: {
+          700: "#0E3568",
+          600: "#15498C",
+          500: "#3D6FB5",
+          400: "#6C9BD8",
+          300: "#A8C3E8",
+          100: "#CBDDF2",
+          50:  "#EEF4FB",
         },
       },
       fontFamily: {
@@ -38,32 +35,22 @@ const config: Config = {
         mono: ["JetBrains Mono", "ui-monospace", "monospace"],
       },
       animation: {
-        "pulse-slow":  "pulse 2.5s cubic-bezier(0.4,0,0.6,1) infinite",
-        "fade-in":     "fadeIn 0.35s ease-out forwards",
-        "slide-up":    "slideUp 0.35s ease-out forwards",
-        "slide-right": "slideRight 0.35s ease-out forwards",
-        shimmer:       "shimmer 1.5s infinite linear",
-        "toast-in":    "toastIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards",
+        "fade-in":  "fadeIn 0.3s ease-out forwards",
+        "slide-up": "slideUp 0.3s ease-out forwards",
+        shimmer:    "shimmer 1.5s infinite linear",
+        "toast-in": "toastIn 0.25s cubic-bezier(0.16,1,0.3,1) forwards",
       },
       keyframes: {
-        fadeIn:      { "0%": { opacity: "0" }, "100%": { opacity: "1" } },
-        slideUp:     { "0%": { opacity: "0", transform: "translateY(12px)" }, "100%": { opacity: "1", transform: "translateY(0)" } },
-        slideRight:  { "0%": { opacity: "0", transform: "translateX(-12px)" }, "100%": { opacity: "1", transform: "translateX(0)" } },
-        shimmer:     { "0%": { backgroundPosition: "-200% 0" }, "100%": { backgroundPosition: "200% 0" } },
-        toastIn:     { from: { transform: "translateY(16px)", opacity: "0" }, to: { transform: "translateY(0)", opacity: "1" } },
+        fadeIn:  { "0%": { opacity: "0" }, "100%": { opacity: "1" } },
+        slideUp: { "0%": { opacity: "0", transform: "translateY(8px)" }, "100%": { opacity: "1", transform: "translateY(0)" } },
+        shimmer: { "0%": { backgroundPosition: "-200% 0" }, "100%": { backgroundPosition: "200% 0" } },
+        toastIn: { from: { transform: "translateY(12px)", opacity: "0" }, to: { transform: "translateY(0)", opacity: "1" } },
       },
       boxShadow: {
-        /* Elevation system */
-        "xs":    "0 1px 2px rgba(0,0,0,0.06)",
-        "sm":    "0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04)",
-        "md":    "0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.04)",
-        "lg":    "0 10px 15px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.04)",
-        /* Navy-specific */
-        "navy":       "0 4px 24px rgba(10,25,41,0.25)",
-        "navy-lg":    "0 8px 40px rgba(10,25,41,0.35)",
-        /* Sky glow */
-        "sky-glow":   "0 0 20px rgba(56,189,248,0.30)",
-        "sky-glow-sm":"0 0 10px rgba(56,189,248,0.20)",
+        /* Hairline elevation only — no ambient glows */
+        xs: "0 1px 2px rgba(11,31,58,0.05)",
+        sm: "0 1px 3px rgba(11,31,58,0.07), 0 1px 2px rgba(11,31,58,0.04)",
+        md: "0 3px 8px rgba(11,31,58,0.08)",
       },
     },
   },
