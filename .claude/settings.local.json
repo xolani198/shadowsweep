@@ -16,7 +16,9 @@
       "Bash(git add *)",
       "Bash(git commit *)",
       "Bash(gh pr create --title 'feat: alerts page, settings page, UI polish & Playwright tests' --body ' *)",
-      "PowerShell(Set-Location \"$env:TEMP\\\\i-dare-you-engine\" ; vercel deploy dist --yes --name i-dare-you-engine 2>&1)"
+      "PowerShell(Set-Location \"$env:TEMP\\\\i-dare-you-engine\" ; vercel deploy dist --yes --name i-dare-you-engine 2>&1)",
+      "Bash(node -e \"process.stdout.write\\(require\\('crypto'\\).randomBytes\\(32\\).toString\\('base64'\\)\\)\")",
+      "Bash(npx vercel *)"
     ]
   }
 }

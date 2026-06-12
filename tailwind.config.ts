@@ -19,15 +19,15 @@ const config: Config = {
           600: "#16325A",
           500: "#1B3A66",
         },
-        /* Tertiary: mid-to-dark blue — interactive elements and accents */
+        /* Interactive: vivid royal blue — buttons, links, active states */
         blue: {
-          700: "#0E3568",
-          600: "#15498C",
-          500: "#3D6FB5",
-          400: "#6C9BD8",
-          300: "#A8C3E8",
-          100: "#CBDDF2",
-          50:  "#EEF4FB",
+          700: "#1751C4",
+          600: "#1D63ED",
+          500: "#2D6BEF",
+          400: "#5E95F5",
+          300: "#9DBFF9",
+          100: "#C3D7F9",
+          50:  "#EAF1FE",
         },
       },
       fontFamily: {

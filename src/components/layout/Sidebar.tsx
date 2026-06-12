@@ -66,7 +66,7 @@ export default function Sidebar() {
               <Icon
                 size={15}
                 strokeWidth={active ? 2.25 : 1.75}
-                style={{ color: active ? "var(--color-nav-accent)" : "inherit", flexShrink: 0 }}
+                style={{ color: active ? "#FFFFFF" : "inherit", flexShrink: 0 }}
               />
               <span className="flex-1">{label}</span>
               {badge != null && badge > 0 && (

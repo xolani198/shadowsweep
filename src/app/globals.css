@@ -17,11 +17,11 @@
   --color-text-secondary: #3D5573;
   --color-text-muted:     #7186A0;
 
-  /* Tertiary: mid-to-dark blue for interactive elements */
-  --color-accent:        #15498C;
-  --color-accent-hover:  #0E3568;
-  --color-accent-subtle: #EEF4FB;
-  --color-accent-muted:  #CBDDF2;
+  /* Interactive: vivid royal blue on white */
+  --color-accent:        #1D63ED;
+  --color-accent-hover:  #1751C4;
+  --color-accent-subtle: #EAF1FE;
+  --color-accent-muted:  #C3D7F9;
 
   /* Muted enterprise semantics */
   --color-danger:  #B42318;
@@ -34,7 +34,7 @@
   --color-nav-border:      #16325A;
   --color-nav-text:        #8CA3C4;
   --color-nav-text-active: #FFFFFF;
-  --color-nav-accent:      #6C9BD8;
+  --color-nav-accent:      #2D6BEF;
 }
 
 /* ── Dark mode — deep navy canvas, no neon ─────────────────────────────── */
@@ -49,9 +49,9 @@
   --color-text-secondary: #A4B6CE;
   --color-text-muted:     #6E84A6;
 
-  --color-accent:        #6C9BD8;
-  --color-accent-hover:  #8FB4E4;
-  --color-accent-subtle: #122B4D;
+  --color-accent:        #5E95F5;
+  --color-accent-hover:  #7FABF8;
+  --color-accent-subtle: #11294F;
   --color-accent-muted:  #1B3A66;
 
   --color-danger:  #E5746C;
@@ -63,7 +63,7 @@
   --color-nav-border:      #16325A;
   --color-nav-text:        #7186A0;
   --color-nav-text-active: #FFFFFF;
-  --color-nav-accent:      #6C9BD8;
+  --color-nav-accent:      #2D6BEF;
 }
 
 /* ── Base ──────────────────────────────────────────────────────────────── */
@@ -121,11 +121,11 @@ html, body {
   color: var(--color-nav-text-active);
   background: rgba(255, 255, 255, 0.04);
 }
+/* Active nav item is a solid blue pill — matches the product-mockup sidebar */
 .nav-item-active,
 .nav-item-active:hover {
-  color: var(--color-nav-text-active);
-  background: rgba(108, 155, 216, 0.12);
-  box-shadow: inset 2px 0 0 var(--color-nav-accent);
+  color: #ffffff;
+  background: var(--color-nav-accent);
 }
 
 /* ── Scrollbar ─────────────────────────────────────────────────────────── */
