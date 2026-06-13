@@ -3,8 +3,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Shield, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import ThemeToggle from "@/components/layout/ThemeToggle";
+import Logo from "@/components/layout/Logo";
 
 export default function AuthPage() {
   const [loading, setLoading] = useState<"google" | "microsoft" | null>(null);
@@ -28,9 +29,7 @@ export default function AuthPage() {
       <div className="w-full max-w-[380px] rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-8 shadow-sm">
         {/* Logo */}
         <div className="mb-6 flex flex-col items-center gap-3 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--color-accent)]">
-            <Shield size={22} className="text-white" />
-          </div>
+          <Logo showText={false} size={48} />
           <div>
             <h1 className="text-[20px] font-extrabold tracking-tight">
               Shadow<span className="text-[var(--color-accent)]">Sweep</span>

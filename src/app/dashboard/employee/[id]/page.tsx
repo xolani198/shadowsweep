@@ -280,7 +280,7 @@ export default function EmployeeProfilePage() {
                 disabled={revokeStatus === "running"}
                 className={`flex-shrink-0 inline-flex items-center gap-2 rounded-xl px-6 py-3 text-[14px] font-extrabold text-white transition-all ${
                   revokeStatus === "running"
-                    ? "bg-purple-400 cursor-not-allowed"
+                    ? "bg-[var(--color-accent)]/50 cursor-not-allowed"
                     : "bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)]"
                 }`}
               >

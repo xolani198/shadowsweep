@@ -7,9 +7,9 @@ import {
   Users,
   Bell,
   Settings,
-  Shield,
 } from "lucide-react";
 import { METRICS } from "@/lib/mockData";
+import Logo from "./Logo";
 
 const NAV = [
   { href: "/dashboard",           label: "Dashboard", icon: LayoutDashboard, exact: true },
@@ -36,18 +36,10 @@ export default function Sidebar() {
     >
       {/* Logo */}
       <div
-        className="flex items-center gap-3 px-5 py-[17px]"
+        className="flex items-center px-5 py-[17px]"
         style={{ borderBottom: "1px solid var(--color-nav-border)" }}
       >
-        <div
-          className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md"
-          style={{ background: "var(--color-nav-accent)" }}
-        >
-          <Shield size={14} strokeWidth={2.5} style={{ color: "#081A33" }} />
-        </div>
-        <span className="text-[14px] font-bold tracking-tight" style={{ color: "var(--color-nav-text-active)" }}>
-          Shadow<span style={{ color: "var(--color-nav-accent)" }}>Sweep</span>
-        </span>
+        <Logo size={28} textClassName="text-[var(--color-nav-text-active)]" />
       </div>
 
       {/* Section label */}

@@ -32,6 +32,7 @@ import {
   Feather,
 } from "lucide-react";
 import ThemeToggle from "@/components/layout/ThemeToggle";
+import Logo from "@/components/layout/Logo";
 
 /* ── Content ─────────────────────────────────────────────────────────────── */
 
@@ -267,14 +268,7 @@ export default function LandingPage() {
       {/* ── Navbar ──────────────────────────────────────────────────────── */}
       <nav className="fixed inset-x-0 top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-bg)]/95 backdrop-blur-sm">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--color-accent)]">
-              <Shield size={15} strokeWidth={2.5} className="text-white" />
-            </div>
-            <span className="text-[15px] font-extrabold tracking-tight">
-              Shadow<span className="text-[var(--color-accent)]">Sweep</span>
-            </span>
-          </div>
+          <Logo size={28} />
 
           <div className="hidden items-center gap-8 md:flex">
             {[
@@ -657,17 +651,7 @@ export default function LandingPage() {
       {/* ── Footer ──────────────────────────────────────────────────────── */}
       <footer style={{ background: "var(--color-nav-bg)", borderTop: "1px solid var(--color-nav-border)" }}>
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-8">
-          <div className="flex items-center gap-2.5">
-            <div
-              className="flex h-6 w-6 items-center justify-center rounded"
-              style={{ background: "var(--color-nav-accent)" }}
-            >
-              <Shield size={12} strokeWidth={2.5} className="text-white" />
-            </div>
-            <span className="text-[13px] font-bold text-white">
-              Shadow<span style={{ color: "var(--color-nav-accent)" }}>Sweep</span>
-            </span>
-          </div>
+          <Logo size={24} textClassName="text-white" />
           <p className="text-[12px]" style={{ color: "var(--color-nav-text)" }}>
             © {new Date().getFullYear()} ShadowSweep · SOC 2 Type II · GDPR & CCPA ready
           </p>

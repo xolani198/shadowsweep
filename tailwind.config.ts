@@ -51,6 +51,9 @@ const config: Config = {
         xs: "0 1px 2px rgba(11,31,58,0.05)",
         sm: "0 1px 3px rgba(11,31,58,0.07), 0 1px 2px rgba(11,31,58,0.04)",
         md: "0 3px 8px rgba(11,31,58,0.08)",
+        /* Distinct navy elevation for high-priority / high-risk cards */
+        elevated:       "0 12px 24px -8px rgba(11,31,58,0.22), 0 2px 6px rgba(11,31,58,0.08)",
+        "elevated-hover": "0 16px 32px -8px rgba(11,31,58,0.28), 0 4px 10px rgba(11,31,58,0.10)",
       },
     },
   },
