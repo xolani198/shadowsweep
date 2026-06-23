@@ -93,9 +93,9 @@ export default function AuthPage() {
 
         <p className="mt-5 text-center text-[11.5px] leading-relaxed text-[var(--color-text-muted)]">
           By signing in, you agree to ShadowSweep&apos;s{" "}
-          <span className="cursor-pointer text-[var(--color-accent)] hover:underline">Terms of Service</span>{" "}
+          <Link href="/legal/terms" className="text-[var(--color-accent)] hover:underline">Terms of Service</Link>{" "}
           and{" "}
-          <span className="cursor-pointer text-[var(--color-accent)] hover:underline">Privacy Policy</span>.
+          <Link href="/legal/privacy" className="text-[var(--color-accent)] hover:underline">Privacy Policy</Link>.
         </p>
 
         <Link

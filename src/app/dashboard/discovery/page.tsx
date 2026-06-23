@@ -6,8 +6,6 @@ import Link from "next/link";
 import {
   RefreshCw,
   CheckCircle2,
-  XCircle,
-  Clock,
   Filter,
   ExternalLink,
   Wifi,
@@ -213,14 +211,29 @@ export default function DiscoveryPage() {
                   ].map(({ label, field }) => (
                     <th
                       key={field}
-                      onClick={() => label && toggleSort(field)}
-                      className={`px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-[var(--color-text-muted)] ${
-                        label ? "cursor-pointer hover:text-[var(--color-text-primary)]" : ""
-                      }`}
+                      scope="col"
+                      aria-sort={
+                        sortField === field && label
+                          ? sortDir === "desc"
+                            ? "descending"
+                            : "ascending"
+                          : "none"
+                      }
+                      className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-[var(--color-text-muted)]"
                     >
-                      {label}
-                      {sortField === field && label && (
-                        <span className="ml-1">{sortDir === "desc" ? "↓" : "↑"}</span>
+                      {label ? (
+                        <button
+                          type="button"
+                          onClick={() => toggleSort(field)}
+                          className="inline-flex items-center gap-1 uppercase tracking-wide transition hover:text-[var(--color-text-primary)]"
+                        >
+                          {label}
+                          {sortField === field && (
+                            <span aria-hidden>{sortDir === "desc" ? "↓" : "↑"}</span>
+                          )}
+                        </button>
+                      ) : (
+                        <span className="sr-only">Actions</span>
                       )}
                     </th>
                   ))}

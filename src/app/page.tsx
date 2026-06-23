@@ -141,6 +141,51 @@ const TRUSTED_BY = [
   { icon: Feather,  name: "BrightPath" },
 ];
 
+const TESTIMONIALS = [
+  {
+    company: "Pinnacle",
+    companyIcon: Aperture,
+    quote:
+      "ShadowSweep surfaced 64 unsanctioned apps in our first scan and helped us cut SaaS waste by 40% in a single quarter — with zero offboarding gaps.",
+    author: "Sarah Mitchell",
+    role: "CTO, Pinnacle Solutions",
+    avatar: "SM",
+    metrics: [
+      { icon: TrendingDown, value: "40%",  label: "Cost savings" },
+      { icon: Search,       value: "64",   label: "Apps discovered" },
+      { icon: ShieldCheck,  value: "100%", label: "Offboarding coverage" },
+    ],
+  },
+  {
+    company: "CloudSphere",
+    companyIcon: Cloud,
+    quote:
+      "We replaced three spreadsheets and a quarterly audit with one dashboard. Offboarding a leaver now takes minutes instead of a week of chasing app owners.",
+    author: "Daniel Osei",
+    role: "Head of IT, CloudSphere",
+    avatar: "DO",
+    metrics: [
+      { icon: TrendingDown, value: "$211k", label: "Annual savings" },
+      { icon: Search,       value: "128",   label: "Apps discovered" },
+      { icon: ShieldCheck,  value: "6 days→12 min", label: "Offboard time" },
+    ],
+  },
+  {
+    company: "Vertexa",
+    companyIcon: Compass,
+    quote:
+      "The continuous risk scoring caught an unauthorized account with production DNS access on day two. That alert alone paid for the platform many times over.",
+    author: "Lena Hoffmann",
+    role: "CISO, Vertexa",
+    avatar: "LH",
+    metrics: [
+      { icon: TrendingDown, value: "34%",  label: "Spend reduction" },
+      { icon: Search,       value: "47",   label: "Critical risks closed" },
+      { icon: ShieldCheck,  value: "SOC 2", label: "Audit-ready evidence" },
+    ],
+  },
+];
+
 /* ── Motion presets — restrained, easing out, run once ───────────────────── */
 
 const sectionReveal = {
@@ -261,6 +306,13 @@ function DashboardMockup() {
 
 export default function LandingPage() {
   const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
+  const [testimonial, setTestimonial] = useState(0);
+  const active = TESTIMONIALS[testimonial];
+  const ActiveCompanyIcon = active.companyIcon;
+
+  function cycleTestimonial(dir: 1 | -1) {
+    setTestimonial((i) => (i + dir + TESTIMONIALS.length) % TESTIMONIALS.length);
+  }
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text-primary)]">
@@ -448,46 +500,53 @@ export default function LandingPage() {
         >
           <div className="mb-6 flex items-center justify-between">
             <span className="flex items-center gap-2 text-[14px] font-bold">
-              <Aperture size={16} className="text-[var(--color-text-muted)]" /> Pinnacle
+              <ActiveCompanyIcon size={16} className="text-[var(--color-text-muted)]" /> {active.company}
             </span>
             <div className="flex items-center gap-3">
-              <span className="micro-label">Case study</span>
+              <span className="micro-label">
+                Case study {testimonial + 1}/{TESTIMONIALS.length}
+              </span>
               <div className="flex gap-1.5">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full border border-[var(--color-border)] text-[var(--color-text-muted)]">
+                <button
+                  type="button"
+                  onClick={() => cycleTestimonial(-1)}
+                  aria-label="Previous case study"
+                  className="flex h-6 w-6 items-center justify-center rounded-full border border-[var(--color-border)] text-[var(--color-text-muted)] transition hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+                >
                   <ChevronLeft size={13} />
-                </span>
-                <span className="flex h-6 w-6 items-center justify-center rounded-full border border-[var(--color-border)] text-[var(--color-text-muted)]">
+                </button>
+                <button
+                  type="button"
+                  onClick={() => cycleTestimonial(1)}
+                  aria-label="Next case study"
+                  className="flex h-6 w-6 items-center justify-center rounded-full border border-[var(--color-border)] text-[var(--color-text-muted)] transition hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+                >
                   <ChevronRight size={13} />
-                </span>
+                </button>
               </div>
             </div>
           </div>
 
-          <blockquote className="text-[16px] font-semibold leading-relaxed">
-            &ldquo;ShadowSweep surfaced 64 unsanctioned apps in our first scan and helped us
-            cut SaaS waste by 40% in a single quarter — with zero offboarding gaps.&rdquo;
+          <blockquote key={testimonial} className="animate-fade-in text-[16px] font-semibold leading-relaxed">
+            &ldquo;{active.quote}&rdquo;
           </blockquote>
 
           <div className="mt-5 flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-nav-bg)] text-[11px] font-bold text-white">
-              SM
+              {active.avatar}
             </div>
             <div>
-              <p className="text-[13px] font-bold">Sarah Mitchell</p>
-              <p className="text-[11.5px] text-[var(--color-text-muted)]">CTO, Pinnacle Solutions</p>
+              <p className="text-[13px] font-bold">{active.author}</p>
+              <p className="text-[11.5px] text-[var(--color-text-muted)]">{active.role}</p>
             </div>
           </div>
 
           <div className="mt-6 grid grid-cols-3 gap-4 border-t border-[var(--color-border)] pt-6">
-            {[
-              { icon: TrendingDown, value: "40%",  label: "Cost savings" },
-              { icon: Search,       value: "64",   label: "Apps discovered" },
-              { icon: ShieldCheck,  value: "100%", label: "Offboarding coverage" },
-            ].map(({ icon: Icon, value, label }) => (
+            {active.metrics.map(({ icon: Icon, value, label }) => (
               <div key={label} className="text-center">
                 <Icon size={16} strokeWidth={1.75} className="mx-auto mb-1.5 text-[var(--color-accent)]" />
-                <p className="font-mono-data text-[18px] font-semibold">{value}</p>
-                <p className="text-[10.5px] text-[var(--color-text-muted)]">{label}</p>
+                <p className="font-mono-data text-[16px] font-semibold leading-tight">{value}</p>
+                <p className="mt-0.5 text-[10.5px] text-[var(--color-text-muted)]">{label}</p>
               </div>
             ))}
           </div>
@@ -496,7 +555,7 @@ export default function LandingPage() {
             href="/dashboard"
             className="mt-6 inline-flex items-center justify-center gap-1.5 text-[12.5px] font-semibold text-[var(--color-accent)] hover:underline"
           >
-            Read Full Case Study <ArrowRight size={12} />
+            Explore the live demo <ArrowRight size={12} />
           </Link>
         </motion.div>
       </section>
@@ -652,8 +711,13 @@ export default function LandingPage() {
       <footer style={{ background: "var(--color-nav-bg)", borderTop: "1px solid var(--color-nav-border)" }}>
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-8">
           <Logo size={24} textClassName="text-white" />
+          <div className="flex flex-wrap items-center gap-5 text-[12px]" style={{ color: "var(--color-nav-text)" }}>
+            <Link href="/legal/terms" className="hover:text-white">Terms</Link>
+            <Link href="/legal/privacy" className="hover:text-white">Privacy</Link>
+            <Link href="/legal/refund" className="hover:text-white">Refunds</Link>
+          </div>
           <p className="text-[12px]" style={{ color: "var(--color-nav-text)" }}>
-            © {new Date().getFullYear()} ShadowSweep · SOC 2 Type II · GDPR & CCPA ready
+            © {new Date().getFullYear()} ShadowSweep · SOC 2 Type II · GDPR &amp; CCPA ready
           </p>
         </div>
       </footer>

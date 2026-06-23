@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Bell, AlertTriangle, Info, Zap, Users, DollarSign, Shield } from "lucide-react";
+import { Bell, AlertTriangle, Users, DollarSign, Shield } from "lucide-react";
 import TopBar from "@/components/layout/TopBar";
 import Badge from "@/components/ui/Badge";
 import { ALERTS, Alert } from "@/lib/mockData";
@@ -12,12 +12,6 @@ const TYPE_ICONS: Record<Alert["type"], React.ElementType> = {
   departed_employee: Users,
   spend_anomaly: DollarSign,
   data_access: AlertTriangle,
-};
-
-const SEVERITY_ICONS: Record<Alert["severity"], React.ElementType> = {
-  critical: Zap,
-  warning: AlertTriangle,
-  info: Info,
 };
 
 const PAGE_SIZE = 10;
@@ -64,7 +58,21 @@ export default function AlertsPage() {
           </button>
         </div>
 
+        {/* Empty state */}
+        {alerts.length === 0 && (
+          <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] py-16 text-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--color-accent-subtle)]">
+              <Bell size={22} className="text-[var(--color-accent)]" />
+            </div>
+            <p className="text-[15px] font-semibold text-[var(--color-text-primary)]">You&apos;re all caught up</p>
+            <p className="max-w-sm text-[13px] text-[var(--color-text-secondary)]">
+              No alerts right now. New shadow-IT detections and spend anomalies will show up here.
+            </p>
+          </div>
+        )}
+
         {/* Alert rows */}
+        {alerts.length > 0 && (
         <div className="divide-y divide-[var(--color-border)] rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
           {paged.map((alert) => {
             const TypeIcon = TYPE_ICONS[alert.type];
@@ -123,6 +131,7 @@ export default function AlertsPage() {
             );
           })}
         </div>
+        )}
 
         {/* Pagination */}
         {totalPages > 1 && (

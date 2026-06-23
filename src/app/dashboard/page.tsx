@@ -73,11 +73,12 @@ export default function DashboardPage() {
               <h3 className="text-[14px] font-bold text-[var(--color-text-primary)]">Top Shadow Spenders</h3>
             </div>
             <ul className="divide-y divide-[var(--color-border)]">
-              {EMPLOYEES.sort(
-                (a, b) =>
-                  b.shadowApps.reduce((s, x) => s + x.monthlySpend, 0) -
-                  a.shadowApps.reduce((s, x) => s + x.monthlySpend, 0)
-              )
+              {[...EMPLOYEES]
+                .sort(
+                  (a, b) =>
+                    b.shadowApps.reduce((s, x) => s + x.monthlySpend, 0) -
+                    a.shadowApps.reduce((s, x) => s + x.monthlySpend, 0)
+                )
                 .slice(0, 4)
                 .map((emp) => {
                   const spend = emp.shadowApps.reduce((s, x) => s + x.monthlySpend, 0);

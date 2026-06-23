@@ -3,9 +3,33 @@ import Link from "next/link";
 import TopBar from "@/components/layout/TopBar";
 import Badge from "@/components/ui/Badge";
 import { EMPLOYEES } from "@/lib/mockData";
-import { ShieldX, ExternalLink } from "lucide-react";
+import { ShieldX, ExternalLink, Users } from "lucide-react";
 
 export default function EmployeesPage() {
+  if (EMPLOYEES.length === 0) {
+    return (
+      <div className="flex flex-col min-h-full">
+        <TopBar title="Employees" subtitle="All monitored personnel" />
+        <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 py-20 text-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--color-accent-subtle)]">
+            <Users size={22} className="text-[var(--color-accent)]" />
+          </div>
+          <p className="text-[15px] font-semibold text-[var(--color-text-primary)]">No employees yet</p>
+          <p className="max-w-sm text-[13px] text-[var(--color-text-secondary)]">
+            Connect an identity provider in Discovery to start monitoring personnel and their app
+            access.
+          </p>
+          <Link
+            href="/dashboard/discovery"
+            className="mt-1 inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-accent)] px-4 py-2 text-[13px] font-semibold text-white transition hover:bg-[var(--color-accent-hover)]"
+          >
+            Go to Discovery
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-full">
       <TopBar title="Employees" subtitle="All monitored personnel" />
