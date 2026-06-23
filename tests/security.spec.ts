@@ -4,9 +4,9 @@ import { test, expect } from "@playwright/test";
 // Must match the SESSION_SECRET the Playwright webServer starts the dev server with.
 const TEST_SESSION_SECRET = "playwright-e2e-secret-not-for-production";
 
-function signedSessionCookie(): string {
+function signedSessionCookie(overrides: Record<string, unknown> = {}): string {
   const payload = Buffer.from(
-    JSON.stringify({ userId: "usr-e2e", orgId: "org-acme" })
+    JSON.stringify({ userId: "usr-e2e", orgId: "org-acme", ...overrides })
   ).toString("base64url");
   const signature = createHmac("sha256", TEST_SESSION_SECRET)
     .update(payload)
@@ -73,5 +73,21 @@ test.describe("offboard API authorization & validation", () => {
     expect(body.employeeId).toBe("emp-001");
     expect(body.revokedApps).toContain("Figma");
     expect(body.auditLogId).toBeTruthy();
+  });
+
+  test("rejects expired session cookies with 401", async ({ request }) => {
+    const res = await request.post("/api/offboard", {
+      headers: { Cookie: signedSessionCookie({ exp: Math.floor(Date.now() / 1000) - 10 }) },
+      data: { employeeId: "emp-001", scope: "shadow" },
+    });
+    expect(res.status()).toBe(401);
+  });
+
+  test("rejects cross-origin requests with 403", async ({ request }) => {
+    const res = await request.post("/api/offboard", {
+      headers: { Cookie: signedSessionCookie(), Origin: "https://evil.example.com" },
+      data: { employeeId: "emp-001", scope: "shadow" },
+    });
+    expect(res.status()).toBe(403);
   });
 });

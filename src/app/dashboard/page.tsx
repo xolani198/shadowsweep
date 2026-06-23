@@ -6,7 +6,7 @@ import MetricsBanner from "@/components/dashboard/MetricsBanner";
 import AlertsFeed from "@/components/dashboard/AlertsFeed";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
-import { EMPLOYEES, DISCOVERY_ROWS, DiscoveryRow } from "@/lib/mockData";
+import { EMPLOYEES, DISCOVERY_ROWS, DiscoveryRow } from "@/lib/data";
 
 const RISK_RANK: Record<DiscoveryRow["riskLevel"], number> = {
   critical: 0,

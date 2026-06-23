@@ -11,7 +11,7 @@ import {
   PlusCircle,
   ExternalLink,
 } from "lucide-react";
-import { ALERTS, Alert } from "@/lib/mockData";
+import { ALERTS, Alert } from "@/lib/data";
 import Badge from "@/components/ui/Badge";
 
 function timeAgo(ts: string): string {

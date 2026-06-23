@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Bell, AlertTriangle, Users, DollarSign, Shield } from "lucide-react";
 import TopBar from "@/components/layout/TopBar";
 import Badge from "@/components/ui/Badge";
-import { ALERTS, Alert } from "@/lib/mockData";
+import { ALERTS, Alert } from "@/lib/data";
 import Link from "next/link";
 
 const TYPE_ICONS: Record<Alert["type"], React.ElementType> = {

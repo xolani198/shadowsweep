@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Users, ShieldAlert, DollarSign, Activity } from "lucide-react";
-import { METRICS } from "@/lib/mockData";
+import { METRICS } from "@/lib/data";
 
 interface MetricCellProps {
   icon: React.ElementType;

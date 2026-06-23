@@ -12,15 +12,13 @@ import {
   CheckCircle2,
   Copy,
   Check,
-  ExternalLink,
   ChevronDown,
   ChevronUp,
-  Clock,
 } from "lucide-react";
 import TopBar from "@/components/layout/TopBar";
 import Badge from "@/components/ui/Badge";
-import Button from "@/components/ui/Button";
-import { EMPLOYEES, Employee, AppRecord } from "@/lib/mockData";
+import { useToast } from "@/components/ui/Toast";
+import { EMPLOYEES, Employee, AppRecord } from "@/lib/data";
 
 // ── Revoke animation steps ────────────────────────────────────────────────
 
@@ -162,31 +160,67 @@ export default function EmployeeProfilePage() {
   const { id } = useParams<{ id: string }>();
   const employee = EMPLOYEES.find((e) => e.id === id);
 
+  const { toast } = useToast();
   const [revokeStatus, setRevokeStatus] = useState<RevokeStatus>("idle");
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
-
-  const [showToast, setShowToast] = useState(false);
+  // Outcome of the real /api/offboard call, resolved independently of the
+  // step animation. The success state is gated on BOTH completing.
+  const [apiOutcome, setApiOutcome] = useState<null | "ok" | "error">(null);
 
   useEffect(() => {
     if (revokeStatus !== "running") return;
+
+    // Animation finished its steps — resolve based on the API outcome.
     if (currentStep >= REVOKE_STEPS.length) {
-      setRevokeStatus("done");
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 4000);
+      if (apiOutcome === "ok") {
+        setRevokeStatus("done");
+        toast({
+          variant: "success",
+          title: "Access revoked",
+          description: "Audit log updated. Compliance template generated.",
+        });
+      } else if (apiOutcome === "error") {
+        setRevokeStatus("idle");
+        toast({
+          variant: "error",
+          title: "Revocation failed",
+          description: "We couldn't complete offboarding. Please try again.",
+        });
+      }
+      // apiOutcome still null → wait; this effect re-runs when it settles.
       return;
     }
+
     const t = setTimeout(() => {
       setCompletedSteps((prev) => [...prev, currentStep]);
       setCurrentStep((s) => s + 1);
     }, 900);
     return () => clearTimeout(t);
-  }, [revokeStatus, currentStep]);
+  }, [revokeStatus, currentStep, apiOutcome, toast]);
 
   function handleRevoke() {
+    if (!employee) return;
     setRevokeStatus("running");
     setCurrentStep(0);
     setCompletedSteps([]);
+    setApiOutcome(null);
+
+    fetch("/api/offboard", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ employeeId: employee.id, scope: "shadow" }),
+    })
+      .then((r) => {
+        if (r.ok) {
+          setApiOutcome("ok");
+        } else if (r.status === 401) {
+          window.location.href = `/auth?next=${encodeURIComponent(window.location.pathname)}`;
+        } else {
+          setApiOutcome("error");
+        }
+      })
+      .catch(() => setApiOutcome("error"));
   }
 
   if (!employee) {
@@ -391,16 +425,6 @@ export default function EmployeeProfilePage() {
           </div>
         </div>
       </div>
-
-      {/* Revoke toast */}
-      {showToast && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-xl border border-[var(--color-success)]/40 bg-[var(--color-surface)] px-4 py-3 shadow-lg animate-fade-in">
-          <span className="text-[16px]">✅</span>
-          <p className="text-[13px] font-semibold text-[var(--color-text-primary)]">
-            Access fully revoked — audit log updated
-          </p>
-        </div>
-      )}
     </div>
   );
 }

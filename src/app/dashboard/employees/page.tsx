@@ -2,7 +2,7 @@
 import Link from "next/link";
 import TopBar from "@/components/layout/TopBar";
 import Badge from "@/components/ui/Badge";
-import { EMPLOYEES } from "@/lib/mockData";
+import { EMPLOYEES } from "@/lib/data";
 import { ShieldX, ExternalLink, Users } from "lucide-react";
 
 export default function EmployeesPage() {

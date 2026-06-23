@@ -2,7 +2,11 @@ import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
+import { rateLimit, clientKey } from "@/lib/rateLimit";
+import { isSameOrigin } from "@/lib/security";
 import { EMPLOYEES } from "@/lib/mockData";
+
+export const runtime = "nodejs";
 
 const offboardSchema = z
   .object({
@@ -12,10 +16,24 @@ const offboardSchema = z
   .strict();
 
 export async function POST(request: Request) {
+  // Reject obvious cross-site forgeries before doing any work.
+  if (!isSameOrigin(request)) {
+    return NextResponse.json({ error: "Cross-origin request rejected" }, { status: 403 });
+  }
+
   // Authorization gate runs before any body parsing.
   const session = getSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Throttle: 20 offboard actions / minute / client.
+  const limit = rateLimit(`offboard:${clientKey(request)}`, 20, 60 * 1000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Rate limit exceeded. Slow down." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds) } }
+    );
   }
 
   let body: unknown;

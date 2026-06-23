@@ -20,7 +20,7 @@ import {
   DISCOVERY_ROWS,
   DiscoveryRow,
   Integration,
-} from "@/lib/mockData";
+} from "@/lib/data";
 
 // ── Integration Card ───────────────────────────────────────────────────────
 

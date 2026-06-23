@@ -5,7 +5,7 @@ import { Building2, Users, Plug, Save } from "lucide-react";
 import TopBar from "@/components/layout/TopBar";
 import Button from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
-import { INTEGRATIONS, Integration } from "@/lib/mockData";
+import { INTEGRATIONS, Integration } from "@/lib/data";
 
 const ORG_DEFAULTS = { name: "Acme Corp", email: "admin@acmecorp.io" };
 

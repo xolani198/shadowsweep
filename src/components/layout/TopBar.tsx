@@ -2,7 +2,7 @@
 import { Bell, Search } from "lucide-react";
 import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
-import { METRICS } from "@/lib/mockData";
+import { METRICS } from "@/lib/data";
 
 interface TopBarProps {
   title: string;

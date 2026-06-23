@@ -7,8 +7,9 @@ import {
   Users,
   Bell,
   Settings,
+  LogOut,
 } from "lucide-react";
-import { METRICS } from "@/lib/mockData";
+import { METRICS } from "@/lib/data";
 import Logo from "./Logo";
 
 const NAV = [
@@ -21,6 +22,14 @@ const NAV = [
 
 export default function Sidebar() {
   const path = usePathname();
+
+  async function signOut() {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } finally {
+      window.location.href = "/";
+    }
+  }
 
   function isActive(href: string, exact?: boolean) {
     if (href === "/dashboard/employees") return path.startsWith("/dashboard/employee");
@@ -83,7 +92,7 @@ export default function Sidebar() {
           >
             AC
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="truncate text-[12px] font-semibold" style={{ color: "var(--color-nav-text-active)" }}>
               Acme Corp
             </p>
@@ -91,6 +100,15 @@ export default function Sidebar() {
               Enterprise plan
             </p>
           </div>
+          <button
+            onClick={signOut}
+            aria-label="Sign out"
+            title="Sign out"
+            className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md transition hover:bg-white/10"
+            style={{ color: "var(--color-nav-text)" }}
+          >
+            <LogOut size={14} />
+          </button>
         </div>
       </div>
     </aside>
