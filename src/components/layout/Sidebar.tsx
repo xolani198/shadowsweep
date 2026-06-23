@@ -10,6 +10,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { METRICS } from "@/lib/data";
+import { useMobileNav } from "@/contexts/MobileNavContext";
 import Logo from "./Logo";
 
 const NAV = [
@@ -22,6 +23,7 @@ const NAV = [
 
 export default function Sidebar() {
   const path = usePathname();
+  const { open, setOpen } = useMobileNav();
 
   async function signOut() {
     try {
@@ -38,9 +40,12 @@ export default function Sidebar() {
   }
 
   return (
-    /* Structural navy — constant across light/dark themes */
+    /* Structural navy — constant across light/dark themes.
+       Static column on md+, off-canvas drawer on mobile. */
     <aside
-      className="flex h-screen w-56 flex-shrink-0 flex-col"
+      className={`fixed inset-y-0 left-0 z-50 flex h-screen w-56 flex-shrink-0 flex-col transition-transform duration-200 ease-out md:static md:translate-x-0 ${
+        open ? "translate-x-0 shadow-elevated" : "-translate-x-full"
+      }`}
       style={{ background: "var(--color-nav-bg)", borderRight: "1px solid var(--color-nav-border)" }}
     >
       {/* Logo */}
@@ -63,7 +68,12 @@ export default function Sidebar() {
         {NAV.map(({ href, label, icon: Icon, exact, badge }) => {
           const active = isActive(href, exact);
           return (
-            <Link key={href} href={href} className={`nav-item ${active ? "nav-item-active" : ""}`}>
+            <Link
+              key={href}
+              href={href}
+              onClick={() => setOpen(false)}
+              className={`nav-item ${active ? "nav-item-active" : ""}`}
+            >
               <Icon
                 size={15}
                 strokeWidth={active ? 2.25 : 1.75}
