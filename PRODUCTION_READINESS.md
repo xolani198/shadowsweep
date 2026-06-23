@@ -16,6 +16,23 @@ ShadowSweep is a visually polished Next.js 14 (App Router) marketing site + prod
 
 ---
 
+## ✅ Final status — all engineering phases complete
+
+Every P0 and P1 item below is **resolved in code** on the `production-ready` branch. The only remaining items are **P2 polish** (tracked below) and the **manual account/legal steps** that require the owner's credentials — those are documented step-by-step in [`LAUNCH_CHECKLIST.md`](LAUNCH_CHECKLIST.md). Each phase shipped with `tsc` strict + ESLint + `next build` + Playwright all green (**19/19 tests**).
+
+| Phase | Outcome |
+| --- | --- |
+| 0 — Audit | This document + ESLint config (lint previously hung CI). |
+| 2 — Correctness | 404/500/loading/error boundaries, app-wide toasts, working Settings save, functional testimonial carousel, legal pages, dead-code cleanup, empty states, keyboard-accessible table sort. |
+| 3 — Security & data | Real HMAC sessions w/ expiry, login/logout, middleware-protected `/dashboard`, cookie hardening, CSRF origin checks, rate limiting, `DEMO_MODE` data seam, `.env.example`, +auth/expiry/CSRF tests. |
+| 1 — UX/UI | ⌘K command palette, KPI sparklines + trend deltas, responsive mobile sidebar drawer, landing pricing wired to checkout. |
+| 4 — Payments | Stripe Checkout + billing portal + signature-verified webhooks + subscription status; test-mode env keys only; graceful "not configured" fallback. |
+| 5 — Ship | next/font (no render-blocking @import), full SEO metadata, dynamic OG image, SVG favicon, robots.txt, sitemap.xml, README, this doc, LAUNCH_CHECKLIST. |
+
+**Deferred to handoff (need owner credentials, see LAUNCH_CHECKLIST):** Stripe account/keys/products/webhook, Vercel env values + prod promotion, custom domain + DNS/SSL, legal review of templates, email auth (SPF/DKIM/DMARC). **Deferred P2 polish:** shared-store rate limiter, error monitoring (Sentry), analytics, real OAuth + live integrations.
+
+---
+
 ## P0 — Blocks launch
 
 ### Security & auth
