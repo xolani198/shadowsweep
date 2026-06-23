@@ -7,6 +7,7 @@ import {
   Users,
   Bell,
   Settings,
+  CreditCard,
   LogOut,
 } from "lucide-react";
 import { METRICS } from "@/lib/data";
@@ -18,6 +19,7 @@ const NAV = [
   { href: "/dashboard/discovery", label: "Discovery", icon: Search },
   { href: "/dashboard/employees", label: "Employees", icon: Users },
   { href: "/dashboard/alerts",    label: "Alerts",    icon: Bell, badge: METRICS.criticalAlerts },
+  { href: "/dashboard/billing",   label: "Billing",   icon: CreditCard },
   { href: "/dashboard/settings",  label: "Settings",  icon: Settings },
 ];
 

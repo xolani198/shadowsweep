@@ -91,6 +91,7 @@ const WHY_US = [
 
 const PLANS = [
   {
+    id: "starter",
     name: "Starter",
     monthlyPrice: 15,
     yearlyPrice: 50,
@@ -98,8 +99,10 @@ const PLANS = [
     features: ["Up to 25 employees", "3 integrations", "Email alerts", "7-day history"],
     highlighted: false,
     cta: "Start free trial",
+    checkout: true,
   },
   {
+    id: "pro",
     name: "Pro",
     monthlyPrice: 49,
     yearlyPrice: 149,
@@ -114,8 +117,10 @@ const PLANS = [
     ],
     highlighted: true,
     cta: "Start free trial",
+    checkout: true,
   },
   {
+    id: "enterprise",
     name: "Enterprise",
     monthlyPrice: 149,
     yearlyPrice: 499,
@@ -130,6 +135,7 @@ const PLANS = [
     ],
     highlighted: false,
     cta: "Contact sales",
+    checkout: false,
   },
 ];
 
@@ -651,7 +657,11 @@ export default function LandingPage() {
                     ))}
                   </ul>
                   <Link
-                    href="/auth"
+                    href={
+                      plan.checkout
+                        ? `/dashboard/billing?plan=${plan.id}&interval=${billing}`
+                        : "mailto:sales@shadowsweep.app?subject=ShadowSweep%20Enterprise"
+                    }
                     className={`mt-auto block rounded-lg py-2.5 text-center text-[13px] font-semibold transition ${
                       plan.highlighted
                         ? "bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent-hover)]"
