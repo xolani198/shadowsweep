@@ -38,7 +38,13 @@ export async function middleware(req: NextRequest) {
     const res = NextResponse.next();
     if (secret) {
       const demoToken = await createEdgeSessionToken(
-        { userId: "demo-user", orgId: "demo-org", email: "demo@shadowsweep.app", demo: true },
+        {
+          userId: "demo-user",
+          orgId: "demo-org",
+          email: "demo@shadowsweep.app",
+          role: "admin",
+          demo: true,
+        },
         secret
       );
       res.cookies.set(SESSION_COOKIE, demoToken, cookieOptions());

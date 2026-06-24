@@ -9,6 +9,7 @@ interface EdgeSession {
   userId: string;
   orgId: string;
   email?: string;
+  role?: "admin" | "viewer";
   demo?: boolean;
   exp?: number;
 }

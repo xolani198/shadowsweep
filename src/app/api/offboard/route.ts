@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { getSession } from "@/lib/auth";
+import { getSession, canPerformDestructiveActions } from "@/lib/auth";
 import { rateLimit, clientKey } from "@/lib/rateLimit";
 import { isSameOrigin } from "@/lib/security";
 import { EMPLOYEES } from "@/lib/mockData";
@@ -25,6 +25,15 @@ export async function POST(request: Request) {
   const session = getSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Re-check authorization server-side on every destructive call. Never trust
+  // the client: only the admin role may revoke or offboard.
+  if (!canPerformDestructiveActions(session)) {
+    return NextResponse.json(
+      { error: "Forbidden: the admin role is required to offboard." },
+      { status: 403 }
+    );
   }
 
   // Throttle: 20 offboard actions / minute / client.

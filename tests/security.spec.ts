@@ -6,7 +6,7 @@ const TEST_SESSION_SECRET = "playwright-e2e-secret-not-for-production";
 
 function signedSessionCookie(overrides: Record<string, unknown> = {}): string {
   const payload = Buffer.from(
-    JSON.stringify({ userId: "usr-e2e", orgId: "org-acme", ...overrides })
+    JSON.stringify({ userId: "usr-e2e", orgId: "org-acme", role: "admin", ...overrides })
   ).toString("base64url");
   const signature = createHmac("sha256", TEST_SESSION_SECRET)
     .update(payload)
@@ -86,6 +86,22 @@ test.describe("offboard API authorization & validation", () => {
   test("rejects cross-origin requests with 403", async ({ request }) => {
     const res = await request.post("/api/offboard", {
       headers: { Cookie: signedSessionCookie(), Origin: "https://evil.example.com" },
+      data: { employeeId: "emp-001", scope: "shadow" },
+    });
+    expect(res.status()).toBe(403);
+  });
+
+  test("rejects the viewer role with 403 (RBAC)", async ({ request }) => {
+    const res = await request.post("/api/offboard", {
+      headers: { Cookie: signedSessionCookie({ role: "viewer" }) },
+      data: { employeeId: "emp-001", scope: "shadow" },
+    });
+    expect(res.status()).toBe(403);
+  });
+
+  test("treats a missing role as viewer and rejects with 403 (least privilege)", async ({ request }) => {
+    const res = await request.post("/api/offboard", {
+      headers: { Cookie: signedSessionCookie({ role: undefined }) },
       data: { employeeId: "emp-001", scope: "shadow" },
     });
     expect(res.status()).toBe(403);

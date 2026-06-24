@@ -73,6 +73,7 @@ export async function POST(request: Request) {
       userId: "demo-user",
       orgId: "demo-org",
       email: "demo@shadowsweep.app",
+      role: "admin",
       demo: true,
     });
   } else {
@@ -94,6 +95,7 @@ export async function POST(request: Request) {
       userId: "usr-admin",
       orgId: "org-acme",
       email: parsed.data.email,
+      role: "admin",
       demo: false,
     });
   }
