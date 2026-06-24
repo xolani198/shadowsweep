@@ -145,3 +145,27 @@ test.describe("offboard API authorization & validation", () => {
     expect(res.status()).toBe(400);
   });
 });
+
+test.describe("offboard undo", () => {
+  test("rejects unauthenticated requests with 401", async ({ request }) => {
+    const res = await request.post("/api/offboard/undo", { data: { employeeId: "emp-001" } });
+    expect(res.status()).toBe(401);
+  });
+
+  test("rejects the viewer role with 403", async ({ request }) => {
+    const res = await request.post("/api/offboard/undo", {
+      headers: { Cookie: signedSessionCookie({ role: "viewer" }) },
+      data: { employeeId: "emp-001" },
+    });
+    expect(res.status()).toBe(403);
+  });
+
+  test("an admin can undo", async ({ request }) => {
+    const res = await request.post("/api/offboard/undo", {
+      headers: { Cookie: signedSessionCookie() },
+      data: { employeeId: "emp-001" },
+    });
+    expect(res.status()).toBe(200);
+    expect((await res.json()).ok).toBe(true);
+  });
+});

@@ -1,7 +1,7 @@
 // FILE: src/app/dashboard/employee/[id]/page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -15,11 +15,19 @@ import {
   ChevronDown,
   ChevronUp,
   Mail,
+  RotateCcw,
 } from "lucide-react";
 import TopBar from "@/components/layout/TopBar";
 import Badge from "@/components/ui/Badge";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { useToast } from "@/components/ui/Toast";
 import { EMPLOYEES, Employee, AppRecord } from "@/lib/data";
+
+interface OffboardPreview {
+  appCount: number;
+  monthlySpend: number;
+  wouldRevoke: { name: string; riskLevel: string; monthlySpend: number; dataAccess: string[] }[];
+}
 
 // ── Revoke animation steps ────────────────────────────────────────────────
 
@@ -171,13 +179,24 @@ export default function EmployeeProfilePage() {
   // step animation. The success state is gated on BOTH completing.
   const [apiOutcome, setApiOutcome] = useState<null | "ok" | "error">(null);
 
+  // Typed-confirmation modal + server-computed impact preview (dry run).
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [preview, setPreview] = useState<OffboardPreview | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [executing, setExecuting] = useState(false);
+
+  // Undo window after a successful revoke.
+  const [undoLeft, setUndoLeft] = useState(0);
+  const lastAuditRef = useRef<string | null>(null);
+
+  // Step animation, gated on the real API outcome.
   useEffect(() => {
     if (revokeStatus !== "running") return;
 
-    // Animation finished its steps. Resolve based on the API outcome.
     if (currentStep >= REVOKE_STEPS.length) {
       if (apiOutcome === "ok") {
         setRevokeStatus("done");
+        setUndoLeft(8); // open the undo window
         toast({
           variant: "success",
           title: "Access revoked",
@@ -185,13 +204,13 @@ export default function EmployeeProfilePage() {
         });
       } else if (apiOutcome === "error") {
         setRevokeStatus("idle");
+        setExecuting(false);
         toast({
           variant: "error",
           title: "Revocation failed",
           description: "We couldn't complete offboarding. Please try again.",
         });
       }
-      // apiOutcome still null → wait; this effect re-runs when it settles.
       return;
     }
 
@@ -202,20 +221,55 @@ export default function EmployeeProfilePage() {
     return () => clearTimeout(t);
   }, [revokeStatus, currentStep, apiOutcome, toast]);
 
-  function handleRevoke() {
+  // Undo countdown.
+  useEffect(() => {
+    if (undoLeft <= 0) return;
+    const t = setTimeout(() => setUndoLeft((s) => s - 1), 1000);
+    return () => clearTimeout(t);
+  }, [undoLeft]);
+
+  // Open the confirmation modal and load the impact preview via a dry run.
+  function requestRevoke() {
     if (!employee) return;
+    setConfirmOpen(true);
+    setPreview(null);
+    setPreviewLoading(true);
+    fetch("/api/offboard", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ employeeId: employee.id, scope: "shadow", dryRun: true }),
+    })
+      .then(async (r) => {
+        if (r.ok) setPreview(await r.json());
+      })
+      .catch(() => {})
+      .finally(() => setPreviewLoading(false));
+  }
+
+  // Execute the real revoke with an idempotency key so retries are safe.
+  function executeRevoke() {
+    if (!employee) return;
+    setExecuting(true);
+    const idempotencyKey =
+      typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : `idem-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
     setRevokeStatus("running");
     setCurrentStep(0);
     setCompletedSteps([]);
     setApiOutcome(null);
+    setConfirmOpen(false);
 
     fetch("/api/offboard", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Idempotency-Key": idempotencyKey },
       body: JSON.stringify({ employeeId: employee.id, scope: "shadow" }),
     })
-      .then((r) => {
+      .then(async (r) => {
         if (r.ok) {
+          const b = await r.json().catch(() => ({}));
+          lastAuditRef.current = b.auditLogId ?? null;
           setApiOutcome("ok");
         } else if (r.status === 401) {
           window.location.href = `/auth?next=${encodeURIComponent(window.location.pathname)}`;
@@ -224,6 +278,27 @@ export default function EmployeeProfilePage() {
         }
       })
       .catch(() => setApiOutcome("error"));
+  }
+
+  // Undo the offboard within the window: restore the view and log the reversal.
+  function undoRevoke() {
+    if (!employee) return;
+    setUndoLeft(0);
+    fetch("/api/offboard/undo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ employeeId: employee.id, auditLogId: lastAuditRef.current ?? undefined }),
+    })
+      .then((r) => {
+        if (!r.ok) throw new Error("undo failed");
+        setRevokeStatus("idle");
+        setApiOutcome(null);
+        setCompletedSteps([]);
+        setCurrentStep(0);
+        setExecuting(false);
+        toast({ variant: "info", title: "Offboarding undone", description: "Access has been restored." });
+      })
+      .catch(() => toast({ variant: "error", title: "Undo failed", description: "Could not reverse the action." }));
   }
 
   if (!employee) {
@@ -313,7 +388,7 @@ export default function EmployeeProfilePage() {
                 </p>
               </div>
               <button
-                onClick={handleRevoke}
+                onClick={requestRevoke}
                 disabled={revokeStatus === "running"}
                 className={`flex-shrink-0 inline-flex items-center gap-2 rounded-xl px-6 py-3 text-[14px] font-extrabold text-white transition-all ${
                   revokeStatus === "running"
@@ -430,6 +505,69 @@ export default function EmployeeProfilePage() {
           </div>
         </div>
       </div>
+
+      {/* Typed-confirmation modal with a real (dry-run) impact preview */}
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Revoke all shadow IT access"
+        confirmPhrase={employee.name}
+        confirmLabel="Revoke access"
+        loading={executing}
+        onConfirm={executeRevoke}
+        onClose={() => setConfirmOpen(false)}
+      >
+        <p className="text-[13px] leading-relaxed text-[var(--color-text-secondary)]">
+          This revokes OAuth tokens and cancels subscriptions for{" "}
+          <span className="font-semibold text-[var(--color-text-primary)]">{employee.name}</span>{" "}
+          <span className="font-mono-data text-[12px]">({employee.email})</span>. You will have a few
+          seconds to undo before it is final.
+        </p>
+
+        <div className="mt-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)] p-3">
+          <p className="micro-label mb-2">Impact preview</p>
+          {previewLoading && (
+            <div className="space-y-1.5">
+              <div className="skeleton h-3 w-40" />
+              <div className="skeleton h-3 w-32" />
+            </div>
+          )}
+          {!previewLoading && preview && (
+            <>
+              <p className="text-[12.5px] text-[var(--color-text-secondary)]">
+                <span className="font-mono-data font-semibold text-[var(--color-danger)]">{preview.appCount}</span>{" "}
+                apps will be revoked ·{" "}
+                <span className="font-mono-data font-semibold text-[var(--color-danger)]">${preview.monthlySpend}/mo</span>{" "}
+                recovered
+              </p>
+              <ul className="mt-2 max-h-40 space-y-1 overflow-y-auto">
+                {preview.wouldRevoke.map((a) => (
+                  <li key={a.name} className="flex items-center justify-between gap-2 text-[12px]">
+                    <span className="truncate text-[var(--color-text-primary)]">{a.name}</span>
+                    <Badge variant={a.riskLevel as "low" | "medium" | "high" | "critical"}>{a.riskLevel}</Badge>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+          {!previewLoading && !preview && (
+            <p className="text-[12.5px] text-[var(--color-text-muted)]">Could not load the impact preview.</p>
+          )}
+        </div>
+      </ConfirmDialog>
+
+      {/* Undo window */}
+      {revokeStatus === "done" && undoLeft > 0 && (
+        <div className="fixed bottom-6 left-1/2 z-[90] flex -translate-x-1/2 items-center gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 shadow-elevated">
+          <CheckCircle2 size={16} className="text-[var(--color-success)]" />
+          <span className="text-[13px] font-semibold text-[var(--color-text-primary)]">Access revoked.</span>
+          <button
+            onClick={undoRevoke}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--color-border-strong)] px-3 py-1 text-[12.5px] font-semibold text-[var(--color-text-primary)] transition hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+          >
+            <RotateCcw size={12} /> Undo ({undoLeft}s)
+          </button>
+        </div>
+      )}
     </div>
   );
 }
