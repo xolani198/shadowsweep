@@ -106,4 +106,42 @@ test.describe("offboard API authorization & validation", () => {
     });
     expect(res.status()).toBe(403);
   });
+
+  test("dry run previews impact without revoking", async ({ request }) => {
+    const res = await request.post("/api/offboard", {
+      headers: { Cookie: signedSessionCookie() },
+      data: { employeeId: "emp-001", scope: "shadow", dryRun: true },
+    });
+    expect(res.status()).toBe(200);
+    const body = await res.json();
+    expect(body.dryRun).toBe(true);
+    expect(Array.isArray(body.wouldRevoke)).toBe(true);
+    expect(body.appCount).toBeGreaterThan(0);
+    // A preview never reports executed revocations.
+    expect(body.revokedApps).toBeUndefined();
+  });
+
+  test("idempotency key makes a retry safe (no double execution)", async ({ request }) => {
+    const key = `e2e-idem-${Date.now()}`;
+    const first = await request.post("/api/offboard", {
+      headers: { Cookie: signedSessionCookie(), "Idempotency-Key": key },
+      data: { employeeId: "emp-001", scope: "shadow" },
+    });
+    const firstBody = await first.json();
+    const second = await request.post("/api/offboard", {
+      headers: { Cookie: signedSessionCookie(), "Idempotency-Key": key },
+      data: { employeeId: "emp-001", scope: "shadow" },
+    });
+    expect(second.headers()["idempotent-replay"]).toBe("true");
+    const secondBody = await second.json();
+    expect(secondBody.auditLogId).toBe(firstBody.auditLogId);
+  });
+
+  test("rejects a malformed Idempotency-Key with 400", async ({ request }) => {
+    const res = await request.post("/api/offboard", {
+      headers: { Cookie: signedSessionCookie(), "Idempotency-Key": "short" },
+      data: { employeeId: "emp-001", scope: "shadow" },
+    });
+    expect(res.status()).toBe(400);
+  });
 });

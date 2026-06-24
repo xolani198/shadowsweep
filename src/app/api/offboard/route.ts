@@ -4,6 +4,11 @@ import { getSession, canPerformDestructiveActions } from "@/lib/auth";
 import { rateLimit, clientKey } from "@/lib/rateLimit";
 import { isSameOrigin } from "@/lib/security";
 import { recordAudit, requestContext } from "@/lib/audit";
+import {
+  getIdempotentResult,
+  storeIdempotentResult,
+  isValidIdempotencyKey,
+} from "@/lib/idempotency";
 import { EMPLOYEES } from "@/lib/mockData";
 
 export const runtime = "nodejs";
@@ -12,6 +17,8 @@ const offboardSchema = z
   .object({
     employeeId: z.string().regex(/^emp-\d{3}$/, "employeeId must match emp-NNN"),
     scope: z.enum(["shadow", "all"]).default("shadow"),
+    // When true, compute and return the impact without revoking anything.
+    dryRun: z.boolean().optional().default(false),
   })
   .strict();
 
@@ -82,6 +89,52 @@ export async function POST(request: Request) {
       : employee.shadowApps;
 
   const ctx = requestContext(request);
+
+  // Dry run: preview the impact without revoking anything or consuming an
+  // idempotency key. Returns enough detail for the UI to show what will change.
+  if (parsed.data.dryRun) {
+    recordAudit({
+      action: "offboard_preview",
+      actor: session.userId,
+      org: session.orgId,
+      targetType: "employee",
+      targetId: employee.id,
+      outcome: "success",
+      ip: ctx.ip,
+      userAgent: ctx.userAgent,
+      metadata: { scope: parsed.data.scope, appCount: apps.length },
+    });
+    return NextResponse.json({
+      ok: true,
+      dryRun: true,
+      employeeId: employee.id,
+      employeeName: employee.name,
+      appCount: apps.length,
+      monthlySpend: apps.reduce((sum, a) => sum + a.monthlySpend, 0),
+      wouldRevoke: apps.map((a) => ({
+        name: a.name,
+        riskLevel: a.riskLevel,
+        monthlySpend: a.monthlySpend,
+        dataAccess: a.dataAccess,
+      })),
+    });
+  }
+
+  // Idempotency: an explicit key makes retries safe (no double execution).
+  const idempotencyKey = request.headers.get("idempotency-key");
+  if (idempotencyKey !== null) {
+    if (!isValidIdempotencyKey(idempotencyKey)) {
+      return NextResponse.json(
+        { error: "Invalid Idempotency-Key (expected 8-200 chars of [A-Za-z0-9_-])." },
+        { status: 400 }
+      );
+    }
+    const cached = getIdempotentResult(session.userId, idempotencyKey);
+    if (cached !== undefined) {
+      return NextResponse.json(cached, { headers: { "Idempotent-Replay": "true" } });
+    }
+  }
+
   const audit = recordAudit({
     action: "offboard_execute",
     actor: session.userId,
@@ -91,14 +144,24 @@ export async function POST(request: Request) {
     outcome: "success",
     ip: ctx.ip,
     userAgent: ctx.userAgent,
-    metadata: { scope: parsed.data.scope, revokedCount: apps.length },
+    metadata: {
+      scope: parsed.data.scope,
+      revokedCount: apps.length,
+      idempotencyKey: idempotencyKey ?? "none",
+    },
   });
 
-  return NextResponse.json({
+  const response = {
     ok: true,
     employeeId: employee.id,
     revokedApps: apps.map((a) => a.name),
     auditLogId: audit.id,
     actor: session.userId,
-  });
+  };
+
+  if (idempotencyKey !== null) {
+    storeIdempotentResult(session.userId, idempotencyKey, response);
+  }
+
+  return NextResponse.json(response);
 }
