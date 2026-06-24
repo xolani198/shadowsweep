@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { isSameOrigin } from "@/lib/security";
+import { rateLimit, clientKey } from "@/lib/rateLimit";
 import { getStripe } from "@/lib/stripe";
 
 export const runtime = "nodejs";
@@ -13,6 +14,14 @@ export async function POST(request: Request) {
   const session = getSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const limit = rateLimit(`portal:${clientKey(request)}`, 10, 60 * 1000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds) } }
+    );
   }
 
   const stripe = getStripe();
