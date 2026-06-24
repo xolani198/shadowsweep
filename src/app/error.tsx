@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { RotateCcw, ShieldAlert } from "lucide-react";
 import Logo from "@/components/layout/Logo";
+import { reportError } from "@/lib/monitoring";
 
 export default function Error({
   error,
@@ -13,8 +14,7 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Surface to the monitoring pipeline once one is wired (Sentry, etc.).
-    console.error("Unhandled application error:", error);
+    reportError(error, { where: "app/error", digest: error.digest });
   }, [error]);
 
   return (

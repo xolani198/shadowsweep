@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "secret-scan": "node scripts/secret-scan.mjs --all",
+    "prepare": "git config core.hooksPath .githooks || exit 0"
   },
   "dependencies": {
     "braces": "^3.0.3",

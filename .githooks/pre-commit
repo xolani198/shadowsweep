@@ -1,0 +1,4 @@
+#!/bin/sh
+# Block commits that introduce secrets. Enabled via `git config core.hooksPath
+# .githooks` (run automatically by the npm "prepare" script on install).
+node scripts/secret-scan.mjs --staged
