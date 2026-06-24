@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Building2, Users, Plug, Save } from "lucide-react";
+import { Building2, Users, Plug, Save, ShieldCheck } from "lucide-react";
 import TopBar from "@/components/layout/TopBar";
 import Button from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
+import SecurityEvents from "@/components/dashboard/SecurityEvents";
 import { INTEGRATIONS, Integration } from "@/lib/data";
 
 const ORG_DEFAULTS = { name: "Acme Corp", email: "admin@acmecorp.io" };
@@ -159,6 +160,17 @@ export default function SettingsPage() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* Section 3: Security */}
+        <section>
+          <div className="mb-4 flex items-center gap-2">
+            <ShieldCheck size={15} className="text-[var(--color-accent)]" />
+            <h2 className="text-[14px] font-bold text-[var(--color-text-primary)] uppercase tracking-wider">
+              Security
+            </h2>
+          </div>
+          <SecurityEvents />
         </section>
       </div>
     </div>

@@ -1,9 +1,9 @@
-import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession, canPerformDestructiveActions } from "@/lib/auth";
 import { rateLimit, clientKey } from "@/lib/rateLimit";
 import { isSameOrigin } from "@/lib/security";
+import { recordAudit, requestContext } from "@/lib/audit";
 import { EMPLOYEES } from "@/lib/mockData";
 
 export const runtime = "nodejs";
@@ -30,6 +30,17 @@ export async function POST(request: Request) {
   // Re-check authorization server-side on every destructive call. Never trust
   // the client: only the admin role may revoke or offboard.
   if (!canPerformDestructiveActions(session)) {
+    const ctx = requestContext(request);
+    recordAudit({
+      action: "authz_denied",
+      actor: session.userId,
+      org: session.orgId,
+      targetType: "offboard",
+      outcome: "denied",
+      ip: ctx.ip,
+      userAgent: ctx.userAgent,
+      metadata: { role: session.role },
+    });
     return NextResponse.json(
       { error: "Forbidden: the admin role is required to offboard." },
       { status: 403 }
@@ -70,11 +81,24 @@ export async function POST(request: Request) {
       ? [...employee.shadowApps, ...employee.sanctionedApps]
       : employee.shadowApps;
 
+  const ctx = requestContext(request);
+  const audit = recordAudit({
+    action: "offboard_execute",
+    actor: session.userId,
+    org: session.orgId,
+    targetType: "employee",
+    targetId: employee.id,
+    outcome: "success",
+    ip: ctx.ip,
+    userAgent: ctx.userAgent,
+    metadata: { scope: parsed.data.scope, revokedCount: apps.length },
+  });
+
   return NextResponse.json({
     ok: true,
     employeeId: employee.id,
     revokedApps: apps.map((a) => a.name),
-    auditLogId: randomUUID(),
+    auditLogId: audit.id,
     actor: session.userId,
   });
 }
