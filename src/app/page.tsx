@@ -13,23 +13,14 @@ import {
   ArrowRight,
   Play,
   Users,
-  Timer,
-  Globe,
-  DollarSign,
   Radar,
   FileCheck,
   ShieldCheck,
   Headphones,
-  ChevronLeft,
-  ChevronRight,
   LayoutDashboard,
   Bell,
   Settings,
-  Boxes,
-  Aperture,
-  Cloud,
-  Compass,
-  Feather,
+  DollarSign,
 } from "lucide-react";
 import ThemeToggle from "@/components/layout/ThemeToggle";
 import Logo from "@/components/layout/Logo";
@@ -39,53 +30,75 @@ import Logo from "@/components/layout/Logo";
 const SERVICES = [
   {
     icon: Search,
-    title: "Instant App Discovery",
-    desc: "Connect identity, spend, and billing systems to surface every unauthorized SaaS tool in minutes.",
+    title: "App discovery",
+    desc: "Connect identity, spend, and billing systems to list every unauthorized SaaS tool your team is using.",
   },
   {
     icon: TrendingDown,
-    title: "Spend Forensics",
-    desc: "See the monthly cost of every shadow app, traced to the employee and card that pays for it.",
+    title: "Spend forensics",
+    desc: "See the monthly cost of every shadow app, traced to the employee and the card that pays for it.",
   },
   {
     icon: Zap,
-    title: "One-Click Offboarding",
-    desc: "Revoke all shadow IT access for departing employees with auto-generated compliance templates.",
+    title: "One-click offboarding",
+    desc: "Revoke tokens, cancel subscriptions, and generate a GDPR/CCPA deletion request in a single action.",
   },
   {
     icon: Lock,
-    title: "Continuous Monitoring",
-    desc: "Real-time risk scoring and alerts when employees connect new apps with sensitive data scopes.",
+    title: "Continuous monitoring",
+    desc: "Risk scoring and alerts when an employee connects a new app with access to sensitive data.",
   },
 ];
 
-const STATS = [
-  { icon: Users,      value: "500+",   label: "IT teams protected" },
-  { icon: DollarSign, value: "$4.2M",  label: "Shadow spend recovered" },
-  { icon: Timer,      value: "12 min", label: "Avg. discovery time" },
-  { icon: Globe,      value: "99.9%",  label: "Uptime delivered" },
+/* Real connectors the product reads from. */
+const SOURCES = ["Google Workspace", "Microsoft 365", "Ramp", "Brex", "Stripe"];
+
+/* Capability facts, not customer counts. */
+const CAPABILITIES = [
+  { icon: Search, title: "Every app, surfaced", desc: "OAuth grants plus card and billing charges, joined into one list." },
+  { icon: DollarSign, title: "Real spend, per app", desc: "Monthly cost traced to the employee and card behind it." },
+  { icon: FileCheck, title: "Compliance on tap", desc: "GDPR Article 17 and CCPA deletion requests per offboard." },
+  { icon: ShieldCheck, title: "Signed audit trail", desc: "Every revoke written to a tamper-evident log." },
+];
+
+const STEPS = [
+  {
+    n: "01",
+    title: "Connect",
+    desc: "Link Google Workspace, Microsoft 365, Ramp, Brex, or Stripe over OAuth. Nothing to install on endpoints.",
+  },
+  {
+    n: "02",
+    title: "Discover",
+    desc: "We correlate grants and charges into one list: every app, its monthly cost, and the data it can reach.",
+  },
+  {
+    n: "03",
+    title: "Offboard",
+    desc: "Revoke tokens, cancel subscriptions, and generate a deletion request in one click. Evidence is logged.",
+  },
 ];
 
 const WHY_US = [
   {
     icon: Radar,
-    title: "Expert-Grade Discovery",
-    desc: "OAuth grants, card statements, and billing data correlated automatically.",
+    title: "Correlated discovery",
+    desc: "OAuth grants, card statements, and billing data joined into one view, not three spreadsheets.",
   },
   {
     icon: FileCheck,
-    title: "Compliance Built-In",
-    desc: "GDPR Article 17 and CCPA deletion templates generated for every offboarding.",
+    title: "Compliance built in",
+    desc: "GDPR Article 17 and CCPA deletion requests generated for every offboard.",
   },
   {
     icon: ShieldCheck,
-    title: "SOC 2 & GDPR Ready",
-    desc: "Hardened security headers, signed sessions, and full audit logging.",
+    title: "Hardened by default",
+    desc: "Signed sessions, strict security headers, CSRF checks, and full audit logging.",
   },
   {
     icon: Headphones,
-    title: "Dedicated Support",
-    desc: "A named CSM and same-day response on every enterprise plan.",
+    title: "Founder-led support",
+    desc: "Talk to the people who built it, not a ticket queue.",
   },
 ];
 
@@ -95,7 +108,7 @@ const PLANS = [
     name: "Starter",
     monthlyPrice: 15,
     yearlyPrice: 50,
-    desc: "For lean IT teams getting started with Shadow IT visibility.",
+    desc: "For lean IT teams getting started with shadow IT visibility.",
     features: ["Up to 25 employees", "3 integrations", "Email alerts", "7-day history"],
     highlighted: false,
     cta: "Start free trial",
@@ -106,13 +119,13 @@ const PLANS = [
     name: "Pro",
     monthlyPrice: 49,
     yearlyPrice: 149,
-    desc: "Full-power auditing and automated offboarding for growing orgs.",
+    desc: "Full auditing and automated offboarding for growing orgs.",
     features: [
       "Up to 200 employees",
       "Unlimited integrations",
       "One-click offboarding",
       "Compliance email templates",
-      "Slack & Teams alerts",
+      "Slack and Teams alerts",
       "90-day audit log",
     ],
     highlighted: true,
@@ -139,59 +152,6 @@ const PLANS = [
   },
 ];
 
-const TRUSTED_BY = [
-  { icon: Boxes,    name: "Altivon" },
-  { icon: Aperture, name: "Pinnacle" },
-  { icon: Cloud,    name: "CloudSphere" },
-  { icon: Compass,  name: "Vertexa" },
-  { icon: Feather,  name: "BrightPath" },
-];
-
-const TESTIMONIALS = [
-  {
-    company: "Pinnacle",
-    companyIcon: Aperture,
-    quote:
-      "ShadowSweep surfaced 64 unsanctioned apps in our first scan and helped us cut SaaS waste by 40% in a single quarter, with zero offboarding gaps.",
-    author: "Sarah Mitchell",
-    role: "CTO, Pinnacle Solutions",
-    avatar: "SM",
-    metrics: [
-      { icon: TrendingDown, value: "40%",  label: "Cost savings" },
-      { icon: Search,       value: "64",   label: "Apps discovered" },
-      { icon: ShieldCheck,  value: "100%", label: "Offboarding coverage" },
-    ],
-  },
-  {
-    company: "CloudSphere",
-    companyIcon: Cloud,
-    quote:
-      "We replaced three spreadsheets and a quarterly audit with one dashboard. Offboarding a leaver now takes minutes instead of a week of chasing app owners.",
-    author: "Daniel Osei",
-    role: "Head of IT, CloudSphere",
-    avatar: "DO",
-    metrics: [
-      { icon: TrendingDown, value: "$211k", label: "Annual savings" },
-      { icon: Search,       value: "128",   label: "Apps discovered" },
-      { icon: ShieldCheck,  value: "6 days→12 min", label: "Offboard time" },
-    ],
-  },
-  {
-    company: "Vertexa",
-    companyIcon: Compass,
-    quote:
-      "The continuous risk scoring caught an unauthorized account with production DNS access on day two. That alert alone paid for the platform many times over.",
-    author: "Lena Hoffmann",
-    role: "CISO, Vertexa",
-    avatar: "LH",
-    metrics: [
-      { icon: TrendingDown, value: "34%",  label: "Spend reduction" },
-      { icon: Search,       value: "47",   label: "Critical risks closed" },
-      { icon: ShieldCheck,  value: "SOC 2", label: "Audit-ready evidence" },
-    ],
-  },
-];
-
 /* ── Motion presets: restrained, easing out, run once ────────────────────── */
 
 const sectionReveal = {
@@ -201,7 +161,7 @@ const sectionReveal = {
   transition: { duration: 0.55, ease: "easeOut" as const },
 };
 
-/* ── Hero dashboard mockup (pure HTML, no screenshot) ────────────────────── */
+/* ── Hero dashboard mockup (hand-built, mirrors the live demo data) ───────── */
 
 function DashboardMockup() {
   const MOCK_NAV = [
@@ -247,11 +207,11 @@ function DashboardMockup() {
       <div className="flex-1 bg-[#F6F8FB] p-3">
         <div className="mb-2.5 flex items-center justify-between">
           <div>
-            <p className="text-[10px] font-bold text-[#0B1F3A]">Welcome back, Alex</p>
-            <p className="text-[7.5px] text-[#7186A0]">Here&apos;s what changed in your SaaS stack today.</p>
+            <p className="text-[10px] font-bold text-[#0B1F3A]">Command dashboard</p>
+            <p className="text-[7.5px] text-[#7186A0]">Real-time shadow IT overview for Acme Corp.</p>
           </div>
           <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#081A33] text-[7px] font-bold text-white">
-            AM
+            AC
           </div>
         </div>
 
@@ -312,13 +272,6 @@ function DashboardMockup() {
 
 export default function LandingPage() {
   const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
-  const [testimonial, setTestimonial] = useState(0);
-  const active = TESTIMONIALS[testimonial];
-  const ActiveCompanyIcon = active.companyIcon;
-
-  function cycleTestimonial(dir: 1 | -1) {
-    setTestimonial((i) => (i + dir + TESTIMONIALS.length) % TESTIMONIALS.length);
-  }
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text-primary)]">
@@ -330,7 +283,7 @@ export default function LandingPage() {
 
           <div className="hidden items-center gap-8 md:flex">
             {[
-              { label: "Services",  href: "#services" },
+              { label: "Product",   href: "#services" },
               { label: "Why us",    href: "#why-us" },
               { label: "Pricing",   href: "#pricing" },
               { label: "Live demo", href: "/dashboard" },
@@ -351,7 +304,7 @@ export default function LandingPage() {
               href="/auth"
               className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent)] px-5 py-2.5 text-[13px] font-semibold text-white transition hover:bg-[var(--color-accent-hover)]"
             >
-              Get a Free Audit <ArrowRight size={14} />
+              Get a free audit <ArrowRight size={14} />
             </Link>
           </div>
         </div>
@@ -382,7 +335,7 @@ export default function LandingPage() {
               href="/auth"
               className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent)] px-6 py-3 text-[13.5px] font-semibold text-white transition hover:bg-[var(--color-accent-hover)]"
             >
-              Explore the Platform <ArrowRight size={15} />
+              Get a free audit <ArrowRight size={15} />
             </Link>
             <Link
               href="/dashboard"
@@ -392,13 +345,16 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          {/* Trusted-by strip */}
+          {/* Connectors */}
           <div className="mt-12">
-            <p className="micro-label mb-4">Built for security and IT teams</p>
-            <div className="flex flex-wrap items-center gap-x-7 gap-y-3">
-              {TRUSTED_BY.map(({ icon: Icon, name }) => (
-                <span key={name} className="flex items-center gap-1.5 text-[13.5px] font-semibold text-[var(--color-text-muted)]">
-                  <Icon size={15} strokeWidth={1.75} /> {name}
+            <p className="micro-label mb-4">Connects with the tools you already run</p>
+            <div className="flex flex-wrap items-center gap-2">
+              {SOURCES.map((name) => (
+                <span
+                  key={name}
+                  className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-2.5 py-1 text-[12px] font-semibold text-[var(--color-text-secondary)]"
+                >
+                  {name}
                 </span>
               ))}
             </div>
@@ -414,69 +370,73 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      {/* ── Services ────────────────────────────────────────────────────── */}
+      {/* ── Product: editorial heading + feature list ───────────────────── */}
       <section id="services" className="bg-[var(--color-surface-2)] py-20">
-        <div className="mx-auto max-w-6xl px-6">
-          <motion.div {...sectionReveal} className="mb-12 text-center">
-            <p className="micro-label mb-3 !text-[var(--color-accent)]">What we do</p>
-            <h2 className="text-[28px] font-extrabold tracking-tight">Discover, price, and revoke</h2>
-            <p className="mx-auto mt-3 max-w-lg text-[13.5px] text-[var(--color-text-secondary)]">
+        <div className="mx-auto grid max-w-6xl gap-12 px-6 lg:grid-cols-[0.85fr_1.15fr]">
+          <motion.div {...sectionReveal}>
+            <p className="micro-label mb-3 !text-[var(--color-accent)]">What it does</p>
+            <h2 className="text-[28px] font-extrabold leading-tight tracking-tight">
+              Discover, price, and revoke
+            </h2>
+            <p className="mt-3 max-w-sm text-[13.5px] leading-relaxed text-[var(--color-text-secondary)]">
               We read identity-provider grants, corporate-card spend, and billing data, so no app
               runs without IT knowing what it costs and what it can touch.
             </p>
+            <Link
+              href="/dashboard"
+              className="mt-5 inline-flex items-center gap-1.5 text-[13px] font-semibold text-[var(--color-accent)] hover:underline"
+            >
+              Open the live demo <ArrowRight size={13} />
+            </Link>
           </motion.div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="border-t border-[var(--color-border)]">
             {SERVICES.map(({ icon: Icon, title, desc }, i) => (
               <motion.div
                 key={title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.45, ease: "easeOut", delay: i * 0.08 }}
-                className="flex flex-col rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 transition hover:border-[var(--color-accent)]"
+                transition={{ duration: 0.4, ease: "easeOut", delay: i * 0.06 }}
+                className="flex gap-4 border-b border-[var(--color-border)] py-5"
               >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-accent-subtle)]">
-                  <Icon size={20} strokeWidth={1.75} className="text-[var(--color-accent)]" />
+                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-[var(--color-accent-subtle)]">
+                  <Icon size={17} strokeWidth={1.75} className="text-[var(--color-accent)]" />
                 </div>
-                <h3 className="mb-2 text-[14.5px] font-bold">{title}</h3>
-                <p className="flex-1 text-[12.5px] leading-relaxed text-[var(--color-text-secondary)]">{desc}</p>
-                <Link
-                  href="/dashboard"
-                  className="mt-4 inline-flex items-center gap-1 text-[12.5px] font-semibold text-[var(--color-accent)] hover:underline"
-                >
-                  Learn More <ArrowRight size={12} />
-                </Link>
+                <div>
+                  <h3 className="text-[14.5px] font-bold">{title}</h3>
+                  <p className="mt-1 text-[13px] leading-relaxed text-[var(--color-text-secondary)]">{desc}</p>
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Stats band: navy rounded container ──────────────────────────── */}
+      {/* ── Capabilities band: navy rounded container ───────────────────── */}
       <section className="mx-auto max-w-6xl px-6 py-16">
         <motion.div
           {...sectionReveal}
-          className="grid grid-cols-2 overflow-hidden rounded-2xl md:grid-cols-4"
+          className="grid grid-cols-1 overflow-hidden rounded-2xl sm:grid-cols-2 lg:grid-cols-4"
           style={{ background: "var(--color-nav-bg)" }}
         >
-          {STATS.map(({ icon: Icon, value, label }, i) => (
+          {CAPABILITIES.map(({ icon: Icon, title, desc }, i) => (
             <div
-              key={value}
-              className="flex items-center gap-4 px-7 py-8"
+              key={title}
+              className="px-7 py-7"
               style={{ borderLeft: i > 0 ? "1px solid var(--color-nav-border)" : "none" }}
             >
-              <Icon size={22} strokeWidth={1.5} style={{ color: "var(--color-nav-accent)" }} className="hidden flex-shrink-0 sm:block" />
-              <div>
-                <p className="font-mono-data text-[24px] font-semibold leading-tight text-white">{value}</p>
-                <p className="text-[11.5px]" style={{ color: "var(--color-nav-text)" }}>{label}</p>
-              </div>
+              <Icon size={20} strokeWidth={1.75} style={{ color: "var(--color-nav-accent)" }} />
+              <p className="mt-3 text-[14px] font-bold text-white">{title}</p>
+              <p className="mt-1 text-[11.5px] leading-relaxed" style={{ color: "var(--color-nav-text)" }}>
+                {desc}
+              </p>
             </div>
           ))}
         </motion.div>
       </section>
 
-      {/* ── Why choose us + case study ──────────────────────────────────── */}
+      {/* ── Why us + how a scan works ───────────────────────────────────── */}
       <section id="why-us" className="mx-auto grid max-w-6xl gap-12 px-6 pb-20 lg:grid-cols-2">
         <motion.div {...sectionReveal}>
           <p className="micro-label mb-3 !text-[var(--color-accent)]">Why teams pick us</p>
@@ -500,69 +460,35 @@ export default function LandingPage() {
           </div>
         </motion.div>
 
-        {/* Case study card */}
+        {/* How a scan works */}
         <motion.div
           {...sectionReveal}
           className="flex flex-col rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7 shadow-xs"
         >
           <div className="mb-6 flex items-center justify-between">
-            <span className="flex items-center gap-2 text-[14px] font-bold">
-              <ActiveCompanyIcon size={16} className="text-[var(--color-text-muted)]" /> {active.company}
-            </span>
-            <div className="flex items-center gap-3">
-              <span className="micro-label">
-                Case study {testimonial + 1}/{TESTIMONIALS.length}
-              </span>
-              <div className="flex gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => cycleTestimonial(-1)}
-                  aria-label="Previous case study"
-                  className="flex h-6 w-6 items-center justify-center rounded-full border border-[var(--color-border)] text-[var(--color-text-muted)] transition hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
-                >
-                  <ChevronLeft size={13} />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => cycleTestimonial(1)}
-                  aria-label="Next case study"
-                  className="flex h-6 w-6 items-center justify-center rounded-full border border-[var(--color-border)] text-[var(--color-text-muted)] transition hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
-                >
-                  <ChevronRight size={13} />
-                </button>
-              </div>
-            </div>
+            <span className="text-[14px] font-bold">How a scan works</span>
+            <span className="micro-label">No agents</span>
           </div>
 
-          <blockquote key={testimonial} className="animate-fade-in text-[16px] font-semibold leading-relaxed">
-            &ldquo;{active.quote}&rdquo;
-          </blockquote>
-
-          <div className="mt-5 flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-nav-bg)] text-[11px] font-bold text-white">
-              {active.avatar}
-            </div>
-            <div>
-              <p className="text-[13px] font-bold">{active.author}</p>
-              <p className="text-[11.5px] text-[var(--color-text-muted)]">{active.role}</p>
-            </div>
-          </div>
-
-          <div className="mt-6 grid grid-cols-3 gap-4 border-t border-[var(--color-border)] pt-6">
-            {active.metrics.map(({ icon: Icon, value, label }) => (
-              <div key={label} className="text-center">
-                <Icon size={16} strokeWidth={1.75} className="mx-auto mb-1.5 text-[var(--color-accent)]" />
-                <p className="font-mono-data text-[16px] font-semibold leading-tight">{value}</p>
-                <p className="mt-0.5 text-[10.5px] text-[var(--color-text-muted)]">{label}</p>
+          <div className="flex-1 space-y-6">
+            {STEPS.map((step) => (
+              <div key={step.n} className="flex gap-4">
+                <span className="font-mono-data flex-shrink-0 text-[13px] font-semibold text-[var(--color-accent)]">
+                  {step.n}
+                </span>
+                <div>
+                  <h3 className="text-[14px] font-bold">{step.title}</h3>
+                  <p className="mt-1 text-[12.5px] leading-relaxed text-[var(--color-text-secondary)]">{step.desc}</p>
+                </div>
               </div>
             ))}
           </div>
 
           <Link
             href="/dashboard"
-            className="mt-6 inline-flex items-center justify-center gap-1.5 text-[12.5px] font-semibold text-[var(--color-accent)] hover:underline"
+            className="mt-7 inline-flex items-center justify-center gap-1.5 rounded-lg bg-[var(--color-accent)] py-2.5 text-[13px] font-semibold text-white transition hover:bg-[var(--color-accent-hover)]"
           >
-            Explore the live demo <ArrowRight size={12} />
+            Run it on the demo data <ArrowRight size={13} />
           </Link>
         </motion.div>
       </section>
@@ -591,7 +517,7 @@ export default function LandingPage() {
                   {b === "yearly" ? "Yearly" : "Monthly"}
                   {b === "yearly" && (
                     <span className={`text-[10px] font-bold ${billing === b ? "text-white/80" : "text-[var(--color-success)]"}`}>
-                      −66%
+                      Save more
                     </span>
                   )}
                 </button>
@@ -626,7 +552,7 @@ export default function LandingPage() {
                     </span>
                     {plan.highlighted && (
                       <span className="rounded-full bg-[var(--color-accent)] px-2.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wide text-white">
-                        Most popular
+                        Recommended
                       </span>
                     )}
                   </div>
@@ -694,10 +620,10 @@ export default function LandingPage() {
             </div>
             <div>
               <h2 className="text-[22px] font-extrabold tracking-tight text-white">
-                Ready to take back your SaaS stack?
+                See what your stack is hiding
               </h2>
               <p className="mt-1 text-[13px]" style={{ color: "var(--color-nav-text)" }}>
-                Run your first discovery scan in under 12 minutes. No agents to install.
+                Connect a source and run your first scan in minutes. No agents to install.
               </p>
             </div>
           </div>
@@ -706,13 +632,13 @@ export default function LandingPage() {
               href="/auth"
               className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent)] px-6 py-3 text-[13.5px] font-semibold text-white transition hover:bg-[var(--color-accent-hover)]"
             >
-              Get a Free Audit <ArrowRight size={15} />
+              Get a free audit <ArrowRight size={15} />
             </Link>
             <Link
               href="/dashboard"
               className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-[13.5px] font-semibold text-[#081A33] transition hover:bg-slate-100"
             >
-              View Live Demo
+              Open the live demo
             </Link>
           </div>
         </motion.div>
@@ -728,7 +654,7 @@ export default function LandingPage() {
             <Link href="/legal/refund" className="hover:text-white">Refunds</Link>
           </div>
           <p className="text-[12px]" style={{ color: "var(--color-nav-text)" }}>
-            © {new Date().getFullYear()} ShadowSweep · SOC 2 Type II · GDPR &amp; CCPA ready
+            © {new Date().getFullYear()} ShadowSweep · GDPR and CCPA deletion workflows built in
           </p>
         </div>
       </footer>
