@@ -2,7 +2,7 @@ import React from "react";
 
 type Variant = "low" | "medium" | "high" | "critical" | "info" | "success" | "neutral";
 
-/* Muted enterprise semantics — thin border, restrained tint */
+/* Muted enterprise semantics: thin border, restrained tint */
 const STYLES: Record<Variant, string> = {
   low:      "bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900",
   medium:   "bg-amber-50   text-amber-800   border-amber-200   dark:bg-amber-950/30   dark:text-amber-400   dark:border-amber-900",

@@ -53,7 +53,7 @@ export function sessionCookieOptions() {
 /**
  * Verifies the HMAC-signed session cookie and returns the session, or null.
  *
- * SESSION_SECRET is server-only — it must never carry the NEXT_PUBLIC_ prefix.
+ * SESSION_SECRET is server-only. It must never carry the NEXT_PUBLIC_ prefix.
  * With no secret configured, every request is treated as unauthenticated
  * (secure by default) rather than letting requests through unverified.
  * Sessions carrying an `exp` claim are rejected once expired.

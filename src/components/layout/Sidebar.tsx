@@ -42,7 +42,7 @@ export default function Sidebar() {
   }
 
   return (
-    /* Structural navy — constant across light/dark themes.
+    /* Structural navy, constant across light/dark themes.
        Static column on md+, off-canvas drawer on mobile. */
     <aside
       className={`fixed inset-y-0 left-0 z-50 flex h-screen w-56 flex-shrink-0 flex-col transition-transform duration-200 ease-out md:static md:translate-x-0 ${

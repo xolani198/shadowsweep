@@ -37,7 +37,7 @@ function IntegrationCard({ int: i }: { int: Integration }) {
   }
 
   function formatSync(ts?: string) {
-    if (!ts) return "—";
+    if (!ts) return "Never";
     const diff = Date.now() - new Date(ts).getTime();
     const h = Math.floor(diff / 3600000);
     return h < 1 ? "Just now" : `${h}h ago`;

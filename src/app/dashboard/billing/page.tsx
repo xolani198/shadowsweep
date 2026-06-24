@@ -76,7 +76,7 @@ export default function BillingPage() {
     const params = new URLSearchParams(window.location.search);
     const checkout = params.get("checkout");
     if (checkout === "success") {
-      toast({ variant: "success", title: "Subscription started", description: "Welcome aboard — your plan is being activated." });
+      toast({ variant: "success", title: "Subscription started", description: "Your plan is being activated." });
     } else if (checkout === "cancelled") {
       toast({ variant: "info", title: "Checkout cancelled", description: "No charge was made." });
     }

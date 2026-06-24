@@ -73,7 +73,7 @@ All variables are documented in [`.env.example`](.env.example). Summary:
 | `STRIPE_PRICE_{STARTER,PRO}_{MONTHLY,YEARLY}` | For payments | Recurring Stripe Price IDs |
 | `STRIPE_API_VERSION` | Optional | Pin a Stripe API version |
 
-> `NEXT_PUBLIC_*` variables are inlined into the client bundle — never put a secret behind that prefix. Billing degrades to a clear "not configured" state when Stripe keys are unset, so the app still builds and runs.
+> `NEXT_PUBLIC_*` variables are inlined into the client bundle, so never put a secret behind that prefix. Billing degrades to a clear "not configured" state when Stripe keys are unset, so the app still builds and runs.
 
 ---
 

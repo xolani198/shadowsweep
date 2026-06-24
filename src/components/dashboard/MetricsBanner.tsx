@@ -129,7 +129,7 @@ const CELLS = [
     icon: ShieldAlert,
     label: "Vulnerability score",
     value: `${METRICS.vulnerabilityScore}/100`,
-    sub: "High — action required",
+    sub: "High, action required",
     valueClass: "!text-[var(--color-danger)]",
     series: [58, 61, 60, 66, 69, 71, 74],
     seriesColor: "var(--color-danger)",
@@ -150,7 +150,7 @@ const CELLS = [
     icon: Activity,
     label: "Critical alerts",
     value: String(METRICS.criticalAlerts),
-    sub: "unread — needs review",
+    sub: "unread, needs review",
     valueClass: "!text-[var(--color-danger)]",
     series: [1, 1, 2, 1, 2, 3, METRICS.criticalAlerts || 3],
     seriesColor: "var(--color-danger)",
@@ -169,7 +169,7 @@ export default function MetricsBanner() {
 
   return (
     <div className="px-4 py-5 sm:px-6">
-      {/* Single divided container — gap-px over border colour renders hairline rules */}
+      {/* Single divided container: gap-px over the border colour renders hairline rules */}
       <div className="grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-border)] sm:grid-cols-2 lg:grid-cols-4">
         {CELLS.map((cell) => (
           <MetricCell key={cell.label} {...cell} loading={loading} />

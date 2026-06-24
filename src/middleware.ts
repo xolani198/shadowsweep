@@ -24,7 +24,7 @@ function cookieOptions() {
  *   marketing demo is browsable, while the session machinery stays fully real.
  * - Otherwise: redirect to /auth, preserving the intended destination.
  *
- * The API routes are intentionally NOT matched here — they enforce their own
+ * The API routes are intentionally NOT matched here. They enforce their own
  * session checks, so an unauthenticated API call still fails closed.
  */
 export async function middleware(req: NextRequest) {

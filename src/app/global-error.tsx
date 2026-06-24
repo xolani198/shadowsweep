@@ -37,7 +37,7 @@ export default function GlobalError({
           ShadowSweep hit a fatal error
         </h1>
         <p style={{ fontSize: 14, color: "#3D5573", maxWidth: 420, lineHeight: 1.6, margin: 0 }}>
-          The application failed to load. Please retry — if this keeps happening, contact support.
+          The application failed to load. Please retry. If this keeps happening, contact support.
         </p>
         <button
           onClick={reset}

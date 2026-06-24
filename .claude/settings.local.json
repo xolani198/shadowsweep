@@ -18,7 +18,9 @@
       "Bash(gh pr create --title 'feat: alerts page, settings page, UI polish & Playwright tests' --body ' *)",
       "PowerShell(Set-Location \"$env:TEMP\\\\i-dare-you-engine\" ; vercel deploy dist --yes --name i-dare-you-engine 2>&1)",
       "Bash(node -e \"process.stdout.write\\(require\\('crypto'\\).randomBytes\\(32\\).toString\\('base64'\\)\\)\")",
-      "Bash(npx vercel *)"
+      "Bash(npx vercel *)",
+      "PowerShell(gh auth status 2>&1 | Select-Object -First 5; \"GH_EXIT: $LASTEXITCODE\")",
+      "PowerShell($u=\"https://shadowsweep-git-production-ready-xolani-konela-s-projects.vercel.app\"; try { $r=Invoke-WebRequest -Uri $u -MaximumRedirection 0 -SkipHttpErrorCheck; \"STATUS: $\\($r.StatusCode\\)\"; \"CSP: \" + \\($r.Headers['Content-Security-Policy'] -ne $null\\); \"XFO: \" + $r.Headers['X-Frame-Options']; \"HSTS: \" + \\($r.Headers['Strict-Transport-Security'] -ne $null\\) } catch { \"ERR: $\\($_.Exception.Message\\)\" })"
     ]
   }
 }

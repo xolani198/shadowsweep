@@ -14,6 +14,7 @@ import {
   Check,
   ChevronDown,
   ChevronUp,
+  Mail,
 } from "lucide-react";
 import TopBar from "@/components/layout/TopBar";
 import Badge from "@/components/ui/Badge";
@@ -23,13 +24,13 @@ import { EMPLOYEES, Employee, AppRecord } from "@/lib/data";
 // ── Revoke animation steps ────────────────────────────────────────────────
 
 const REVOKE_STEPS = [
-  { id: 1, label: "Authenticating admin credentials…",       icon: "🔐" },
-  { id: 2, label: "Fetching active OAuth tokens…",            icon: "🔍" },
-  { id: 3, label: "Revoking Google Workspace tokens…",        icon: "🔴" },
-  { id: 4, label: "Cancelling Ramp / Brex subscriptions…",   icon: "💳" },
-  { id: 5, label: "Invalidating Stripe billing seats…",       icon: "❌" },
-  { id: 6, label: "Generating compliance email templates…",   icon: "📧" },
-  { id: 7, label: "Writing to 90-day audit log…",             icon: "📝" },
+  { id: 1, label: "Authenticating admin credentials" },
+  { id: 2, label: "Fetching active OAuth tokens" },
+  { id: 3, label: "Revoking Google Workspace tokens" },
+  { id: 4, label: "Cancelling Ramp and Brex subscriptions" },
+  { id: 5, label: "Invalidating Stripe billing seats" },
+  { id: 6, label: "Generating compliance email template" },
+  { id: 7, label: "Writing to 90-day audit log" },
 ];
 
 type RevokeStatus = "idle" | "running" | "done";
@@ -52,7 +53,9 @@ function AppRow({ app, revoked }: { app: AppRecord; revoked: boolean }) {
         onClick={() => setOpen((o) => !o)}
         className="flex w-full items-center gap-4 px-4 py-3.5 text-left"
       >
-        <span className="text-[20px]">{app.icon}</span>
+        <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[var(--color-surface-2)] text-[12px] font-bold text-[var(--color-text-secondary)]">
+          {app.name.slice(0, 2).toUpperCase()}
+        </span>
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-[13.5px] font-semibold text-[var(--color-text-primary)]">{app.name}</span>
@@ -98,7 +101,7 @@ function AppRow({ app, revoked }: { app: AppRecord; revoked: boolean }) {
 function EmailTemplate({ employee }: { employee: Employee }) {
   const [copied, setCopied] = useState(false);
 
-  const emailBody = `Subject: Data Deletion & Access Revocation Request — GDPR/CCPA Compliance
+  const emailBody = `Subject: Data Deletion and Access Revocation Request (GDPR/CCPA Compliance)
 
 To Whom It May Concern,
 
@@ -116,7 +119,7 @@ The employee's access has been terminated effective today. Please:
 3. Confirm deletion in writing within 30 days per GDPR Article 17 / CCPA §1798.105.
 
 Apps requiring action:
-${employee.shadowApps.map((a) => `  • ${a.name} — ${a.dataAccess.join(", ")}`).join("\n")}
+${employee.shadowApps.map((a) => `  • ${a.name}: ${a.dataAccess.join(", ")}`).join("\n")}
 
 Please direct confirmation to: it-security@acmecorp.io
 
@@ -134,7 +137,7 @@ Acme Corp IT Security Team`;
     <div className="mt-5 rounded-xl border border-[var(--color-accent)]/50 bg-[var(--color-accent-subtle)]">
       <div className="flex items-center justify-between border-b border-[var(--color-accent)]/30 px-4 py-3">
         <div className="flex items-center gap-2">
-          <span className="text-[14px]">📧</span>
+          <Mail size={14} className="text-[var(--color-accent)]" />
           <p className="text-[13px] font-bold text-[var(--color-accent)]">
             Compliance Deletion Email Template
           </p>
@@ -144,7 +147,7 @@ Acme Corp IT Security Team`;
           className="flex items-center gap-1.5 rounded-lg border border-[var(--color-accent)]/40 px-3 py-1.5 text-[12px] font-semibold text-[var(--color-accent)] transition hover:bg-[var(--color-accent)] hover:text-white"
         >
           {copied ? <Check size={12} /> : <Copy size={12} />}
-          {copied ? "Copied!" : "Copy template"}
+          {copied ? "Copied" : "Copy template"}
         </button>
       </div>
       <pre className="font-mono-data overflow-x-auto whitespace-pre-wrap px-4 py-4 text-[11.5px] leading-relaxed text-[var(--color-text-secondary)]">
@@ -171,7 +174,7 @@ export default function EmployeeProfilePage() {
   useEffect(() => {
     if (revokeStatus !== "running") return;
 
-    // Animation finished its steps — resolve based on the API outcome.
+    // Animation finished its steps. Resolve based on the API outcome.
     if (currentStep >= REVOKE_STEPS.length) {
       if (apiOutcome === "ok") {
         setRevokeStatus("done");
@@ -352,7 +355,9 @@ export default function EmployeeProfilePage() {
                           : "text-[var(--color-text-muted)] opacity-40"
                       }`}
                     >
-                      <span className="text-[15px]">{step.icon}</span>
+                      <span className="font-mono-data w-5 flex-shrink-0 text-[11px] tabular-nums">
+                        {String(step.id).padStart(2, "0")}
+                      </span>
                       <span className="flex-1">{step.label}</span>
                       {done && <CheckCircle2 size={14} />}
                       {active && (

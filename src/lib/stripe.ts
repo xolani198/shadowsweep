@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 
 // Server-side Stripe client. Lazily constructed so the app builds, tests, and
-// runs the demo with NO Stripe keys configured — every billing route degrades
+// runs the demo with NO Stripe keys configured. Every billing route degrades
 // to a clear "not configured" response until test-mode keys are supplied.
 
 let cached: Stripe | null = null;
@@ -30,7 +30,7 @@ export type Interval = "monthly" | "yearly";
 export interface PlanCatalogEntry {
   id: PlanId;
   name: string;
-  /** Enterprise is sales-led — no self-serve checkout. */
+  /** Enterprise is sales-led, with no self-serve checkout. */
   checkout: boolean;
 }
 

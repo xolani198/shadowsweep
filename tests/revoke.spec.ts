@@ -13,7 +13,7 @@ test("revoke all access flow for emp-001 (Marcus Chen)", async ({ page }) => {
     page.locator(".step-active, [class*='step']").first()
   ).toBeVisible({ timeout: 3000 });
 
-  // Wait for animation to finish — success state replaces the CTA block
+  // Wait for animation to finish. Success state replaces the CTA block
   await expect(
     page.getByText("All shadow IT access revoked successfully")
   ).toBeVisible({ timeout: 12000 });

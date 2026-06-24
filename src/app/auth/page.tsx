@@ -46,7 +46,7 @@ export default function AuthPage() {
     setError(null);
     setLoading(provider);
     // The marketing demo issues a real (demo-flagged) session via SSO buttons.
-    // Wire real OAuth here in production — see README.
+    // Wire real OAuth here in production. See README.
     const ok = await login({ mode: "demo" });
     if (!ok) setLoading(null);
   }
@@ -83,7 +83,7 @@ export default function AuthPage() {
 
         {DEMO_MODE && (
           <div className="mb-5 rounded-lg border border-[var(--color-accent-muted)] bg-[var(--color-accent-subtle)] px-3 py-2 text-center text-[11.5px] text-[var(--color-accent)]">
-            Demo workspace — single sign-on issues an instant demo session.
+            Demo workspace. Single sign-on issues an instant demo session.
           </div>
         )}
 

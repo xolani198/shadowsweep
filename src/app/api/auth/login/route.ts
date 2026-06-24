@@ -65,7 +65,7 @@ export async function POST(request: Request) {
   let token: string | null = null;
 
   if ("mode" in parsed.data) {
-    // Demo sign-in — only available while the demo dataset is enabled.
+    // Demo sign-in, only available while the demo dataset is enabled.
     if (!DEMO_MODE) {
       return NextResponse.json({ error: "Demo sign-in is disabled" }, { status: 403 });
     }

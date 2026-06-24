@@ -1,6 +1,6 @@
 import { defineConfig } from "@playwright/test";
 
-// Keep in sync with tests/security.spec.ts — used to sign test session cookies.
+// Keep in sync with tests/security.spec.ts. Used to sign test session cookies.
 export const TEST_SESSION_SECRET = "playwright-e2e-secret-not-for-production";
 
 export default defineConfig({

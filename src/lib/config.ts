@@ -6,7 +6,7 @@
 // NEXT_PUBLIC_DEMO_MODE=false on a production tenant to turn it off.
 //
 // NEXT_PUBLIC_ values are inlined into the client bundle at build time, so this
-// is a deploy-time decision — never put secrets behind a NEXT_PUBLIC_ name.
+// is a deploy-time decision. Never put secrets behind a NEXT_PUBLIC_ name.
 
 export const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE !== "false";
 

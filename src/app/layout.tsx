@@ -15,12 +15,12 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 const DESCRIPTION =
-  "ShadowSweep discovers unauthorized SaaS across your org, quantifies wasted spend, and revokes access for departing employees in one click — with GDPR/CCPA compliance built in.";
+  "ShadowSweep discovers unauthorized SaaS across your org, quantifies wasted spend, and revokes access for departing employees in one click. GDPR and CCPA compliance is built in.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "ShadowSweep — Discover & Offboard Shadow IT",
+    default: "ShadowSweep: Discover and Offboard Shadow IT",
     template: "%s · ShadowSweep",
   },
   description: DESCRIPTION,
@@ -40,13 +40,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "ShadowSweep",
-    title: "ShadowSweep — Discover & Offboard Shadow IT",
+    title: "ShadowSweep: Discover and Offboard Shadow IT",
     description: DESCRIPTION,
     url: SITE_URL,
   },
   twitter: {
     card: "summary_large_image",
-    title: "ShadowSweep — Discover & Offboard Shadow IT",
+    title: "ShadowSweep: Discover and Offboard Shadow IT",
     description: DESCRIPTION,
   },
   robots: {

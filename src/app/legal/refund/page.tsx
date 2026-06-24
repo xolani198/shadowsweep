@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { LegalDoc, LegalSection } from "@/components/legal/LegalDoc";
 
 export const metadata: Metadata = {
-  title: "Refund Policy — ShadowSweep",
+  title: "Refund Policy · ShadowSweep",
   description: "ShadowSweep's cancellation and refund terms.",
 };
 

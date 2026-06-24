@@ -1,7 +1,7 @@
 // Lightweight in-memory fixed-window rate limiter.
 //
 // NOTE: this is per-instance. On serverless/multi-instance hosting (Vercel) it
-// is best-effort — each instance keeps its own counters. For hard, global
+// is best-effort: each instance keeps its own counters. For hard, global
 // limits in production, back this with a shared store such as Upstash Redis or
 // Vercel KV. It is still a meaningful first line of defense against bursts and
 // brute-force from a single client.

@@ -1,12 +1,12 @@
 /* FILE: src/app/globals.css */
 /* Fonts are self-hosted via next/font (see src/app/layout.tsx) and exposed as
-   CSS variables --font-inter / --font-jetbrains — no render-blocking @import. */
+   CSS variables --font-inter / --font-jetbrains. No render-blocking @import. */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ── Light mode — crisp white canvas, deep navy structure ─────────────── */
+/* ── Light mode: crisp white canvas, deep navy structure ──────────────── */
 :root {
   --color-bg:            #FFFFFF;
   --color-surface:       #FFFFFF;
@@ -29,7 +29,7 @@
   --color-warning: #B54708;
   --color-success: #067647;
 
-  /* Structural navy — sidebar, hero, footer; constant across themes */
+  /* Structural navy: sidebar, hero, footer; constant across themes */
   --color-nav-bg:          #081A33;
   --color-nav-surface:     #0D2547;
   --color-nav-border:      #16325A;
@@ -38,7 +38,7 @@
   --color-nav-accent:      #2D6BEF;
 }
 
-/* ── Dark mode — deep navy canvas, no neon ─────────────────────────────── */
+/* ── Dark mode: deep navy canvas, no neon ──────────────────────────────── */
 .dark {
   --color-bg:            #0A1626;
   --color-surface:       #0E1E33;
@@ -122,7 +122,7 @@ html, body {
   color: var(--color-nav-text-active);
   background: rgba(255, 255, 255, 0.04);
 }
-/* Active nav item is a solid blue pill — matches the product-mockup sidebar */
+/* Active nav item is a solid blue pill that matches the product-mockup sidebar */
 .nav-item-active,
 .nav-item-active:hover {
   color: #ffffff;

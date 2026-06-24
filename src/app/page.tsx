@@ -45,7 +45,7 @@ const SERVICES = [
   {
     icon: TrendingDown,
     title: "Spend Forensics",
-    desc: "Pinpoint exactly how much waste each shadow app is burning — real dollar figures, per employee.",
+    desc: "See the monthly cost of every shadow app, traced to the employee and card that pays for it.",
   },
   {
     icon: Zap,
@@ -152,7 +152,7 @@ const TESTIMONIALS = [
     company: "Pinnacle",
     companyIcon: Aperture,
     quote:
-      "ShadowSweep surfaced 64 unsanctioned apps in our first scan and helped us cut SaaS waste by 40% in a single quarter — with zero offboarding gaps.",
+      "ShadowSweep surfaced 64 unsanctioned apps in our first scan and helped us cut SaaS waste by 40% in a single quarter, with zero offboarding gaps.",
     author: "Sarah Mitchell",
     role: "CTO, Pinnacle Solutions",
     avatar: "SM",
@@ -192,7 +192,7 @@ const TESTIMONIALS = [
   },
 ];
 
-/* ── Motion presets — restrained, easing out, run once ───────────────────── */
+/* ── Motion presets: restrained, easing out, run once ────────────────────── */
 
 const sectionReveal = {
   initial: { opacity: 0, y: 24 },
@@ -212,7 +212,7 @@ function DashboardMockup() {
     { icon: Settings,        label: "Settings" },
   ];
   const ACTIVITY = [
-    { dot: "#DC2626", text: "Mailchimp detected — critical",   time: "2m" },
+    { dot: "#DC2626", text: "Mailchimp detected, critical",    time: "2m" },
     { dot: "#1D63ED", text: "Cloudflare tokens revoked",        time: "15m" },
     { dot: "#067647", text: "Audit log updated",                time: "1h" },
     { dot: "#B54708", text: "Spend anomaly: +34% this month",   time: "2h" },
@@ -269,7 +269,7 @@ function DashboardMockup() {
               </svg>
               <div>
                 <p className="font-mono-data text-[13px] font-semibold text-[#0B1F3A]">74<span className="text-[8px] text-[#7186A0]">/100</span></p>
-                <p className="text-[7px] text-[#B42318]">High — action required</p>
+                <p className="text-[7px] text-[#B42318]">High, action required</p>
               </div>
             </div>
           </div>
@@ -357,7 +357,7 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* ── Hero — copy left, product mockup right ──────────────────────── */}
+      {/* ── Hero: copy left, product mockup right ───────────────────────── */}
       <section className="mx-auto grid max-w-6xl items-center gap-12 px-6 pb-20 pt-32 lg:grid-cols-2">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -365,16 +365,16 @@ export default function LandingPage() {
           transition={{ duration: 0.55, ease: "easeOut" }}
         >
           <p className="micro-label mb-4 !text-[var(--color-accent)]">
-            Smart Shadow IT control for a digital world
+            OAuth grants, card spend, and billing in one view
           </p>
           <h1 className="text-[38px] font-extrabold leading-[1.12] tracking-tight md:text-[46px]">
-            Total SaaS Visibility.
+            Find the SaaS you
             <br />
-            Built Around Your <span className="text-[var(--color-accent)]">Control.</span>
+            don&apos;t know about. <span className="text-[var(--color-accent)]">Shut it down.</span>
           </h1>
           <p className="mt-5 max-w-md text-[15px] leading-relaxed text-[var(--color-text-secondary)]">
-            From discovery to offboarding, ShadowSweep connects your identity, spend, and
-            billing tools to find every unauthorized app — and revoke it in one click.
+            ShadowSweep correlates your identity provider, corporate cards, and billing to surface
+            every app employees signed up for, then revokes access the day they leave.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -388,13 +388,13 @@ export default function LandingPage() {
               href="/dashboard"
               className="inline-flex items-center gap-2 rounded-lg border border-[var(--color-border-strong)] px-6 py-3 text-[13.5px] font-semibold text-[var(--color-text-primary)] transition hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
             >
-              <Play size={13} className="fill-current" /> Watch the Demo
+              <Play size={13} className="fill-current" /> Open the live demo
             </Link>
           </div>
 
           {/* Trusted-by strip */}
           <div className="mt-12">
-            <p className="micro-label mb-4">Trusted by forward-thinking IT teams</p>
+            <p className="micro-label mb-4">Built for security and IT teams</p>
             <div className="flex flex-wrap items-center gap-x-7 gap-y-3">
               {TRUSTED_BY.map(({ icon: Icon, name }) => (
                 <span key={name} className="flex items-center gap-1.5 text-[13.5px] font-semibold text-[var(--color-text-muted)]">
@@ -419,9 +419,10 @@ export default function LandingPage() {
         <div className="mx-auto max-w-6xl px-6">
           <motion.div {...sectionReveal} className="mb-12 text-center">
             <p className="micro-label mb-3 !text-[var(--color-accent)]">What we do</p>
-            <h2 className="text-[28px] font-extrabold tracking-tight">End-to-End Shadow IT Control</h2>
+            <h2 className="text-[28px] font-extrabold tracking-tight">Discover, price, and revoke</h2>
             <p className="mx-auto mt-3 max-w-lg text-[13.5px] text-[var(--color-text-secondary)]">
-              Comprehensive coverage designed to expose your full SaaS footprint and keep it governed.
+              We read identity-provider grants, corporate-card spend, and billing data, so no app
+              runs without IT knowing what it costs and what it can touch.
             </p>
           </motion.div>
 
@@ -452,7 +453,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Stats band — navy rounded container ─────────────────────────── */}
+      {/* ── Stats band: navy rounded container ──────────────────────────── */}
       <section className="mx-auto max-w-6xl px-6 py-16">
         <motion.div
           {...sectionReveal}
@@ -478,11 +479,11 @@ export default function LandingPage() {
       {/* ── Why choose us + case study ──────────────────────────────────── */}
       <section id="why-us" className="mx-auto grid max-w-6xl gap-12 px-6 pb-20 lg:grid-cols-2">
         <motion.div {...sectionReveal}>
-          <p className="micro-label mb-3 !text-[var(--color-accent)]">Why choose us</p>
+          <p className="micro-label mb-3 !text-[var(--color-accent)]">Why teams pick us</p>
           <h2 className="text-[26px] font-extrabold tracking-tight">Visibility. Compliance. Control.</h2>
           <p className="mt-3 max-w-md text-[13.5px] leading-relaxed text-[var(--color-text-secondary)]">
-            We combine deep discovery coverage with a security-first architecture to deliver
-            governance IT leaders can stand behind.
+            Every offboard writes a signed audit-log entry and a GDPR Article 17 deletion request.
+            Evidence your auditors accept, generated as you work.
           </p>
           <div className="mt-8 grid gap-x-8 gap-y-7 sm:grid-cols-2">
             {WHY_US.map(({ icon: Icon, title, desc }) => (
@@ -677,7 +678,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── CTA band — navy rounded container ───────────────────────────── */}
+      {/* ── CTA band: navy rounded container ────────────────────────────── */}
       <section className="mx-auto max-w-6xl px-6 py-16">
         <motion.div
           {...sectionReveal}
@@ -696,7 +697,7 @@ export default function LandingPage() {
                 Ready to take back your SaaS stack?
               </h2>
               <p className="mt-1 text-[13px]" style={{ color: "var(--color-nav-text)" }}>
-                Run your first discovery scan in under 12 minutes — no agents to install.
+                Run your first discovery scan in under 12 minutes. No agents to install.
               </p>
             </div>
           </div>

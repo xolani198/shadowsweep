@@ -16,7 +16,7 @@ test.describe("auth: demo sign-in", () => {
     expect(setCookie.toLowerCase()).toContain("httponly");
     expect(setCookie.toLowerCase()).toContain("samesite=lax");
 
-    // The request context now carries the session — offboard should succeed.
+    // The request context now carries the session, so offboard should succeed.
     const off = await request.post("/api/offboard", {
       headers: { "x-forwarded-for": "10.10.0.1" },
       data: { employeeId: "emp-001", scope: "shadow" },

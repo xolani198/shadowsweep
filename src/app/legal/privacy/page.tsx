@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { LegalDoc, LegalSection } from "@/components/legal/LegalDoc";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — ShadowSweep",
+  title: "Privacy Policy · ShadowSweep",
   description: "How ShadowSweep collects, uses, and protects your data.",
 };
 

@@ -10,7 +10,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        /* Secondary: deep navy — structural elements and primary text */
+        /* Secondary: deep navy, for structural elements and primary text */
         navy: {
           950: "#050F1F",
           900: "#081A33",
@@ -19,7 +19,7 @@ const config: Config = {
           600: "#16325A",
           500: "#1B3A66",
         },
-        /* Interactive: vivid royal blue — buttons, links, active states */
+        /* Interactive: vivid royal blue, for buttons, links, active states */
         blue: {
           700: "#1751C4",
           600: "#1D63ED",
@@ -47,7 +47,7 @@ const config: Config = {
         toastIn: { from: { transform: "translateY(12px)", opacity: "0" }, to: { transform: "translateY(0)", opacity: "1" } },
       },
       boxShadow: {
-        /* Hairline elevation only — no ambient glows */
+        /* Hairline elevation only, no ambient glows */
         xs: "0 1px 2px rgba(11,31,58,0.05)",
         sm: "0 1px 3px rgba(11,31,58,0.07), 0 1px 2px rgba(11,31,58,0.04)",
         md: "0 3px 8px rgba(11,31,58,0.08)",

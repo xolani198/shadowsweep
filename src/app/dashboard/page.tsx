@@ -29,9 +29,9 @@ export default function DashboardPage() {
       {/* Metrics */}
       <MetricsBanner />
 
-      {/* Tiered Horizon Stack — three-column layout */}
+      {/* Tiered Horizon Stack: three-column layout */}
       <div className="grid flex-1 gap-5 px-6 pb-8 lg:grid-cols-[300px_1fr_340px]">
-        {/* Left: core directories — at-risk employees */}
+        {/* Left: core directories, at-risk employees */}
         <div className="flex flex-col gap-4">
           {/* Departing employees */}
           <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
