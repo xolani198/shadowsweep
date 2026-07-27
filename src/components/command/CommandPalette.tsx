@@ -143,12 +143,24 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
     setActiveIndex(0);
   }, [query]);
 
-  // Global ⌘K / Ctrl+K to toggle the palette.
+  // Global ⌘K / Ctrl+K to toggle the palette, and Escape to close it. Escape is
+  // handled here as well as on the input so it still works if focus has moved
+  // out of the field.
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         setIsOpen((v) => !v);
+        return;
+      }
+      if (e.key === "Escape") {
+        setIsOpen((wasOpen) => {
+          if (wasOpen) {
+            setQuery("");
+            setActiveIndex(0);
+          }
+          return false;
+        });
       }
     }
     window.addEventListener("keydown", onKey);

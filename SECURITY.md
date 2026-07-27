@@ -73,7 +73,7 @@ The middleware intentionally does not match `/api/*`, so API routes always enfor
 ## HTTP and app-level hardening
 
 - **Security headers** (`next.config.mjs`) on every response: Content-Security-Policy (`object-src 'none'`, `frame-ancestors 'none'`, `base-uri 'self'`, `form-action 'self'`), `Strict-Transport-Security` (2 years, preload), `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, and a restrictive `Permissions-Policy`. `X-Powered-By` is removed.
-- **XSS / injection.** Output is rendered through React (auto-escaped); there is no `dangerouslySetInnerHTML`. Inputs are schema-validated server-side.
+- **XSS / injection.** Output is rendered through React, which escapes it automatically. `dangerouslySetInnerHTML` is used in exactly one place, `src/app/layout.tsx`, for the theme bootstrap: a fixed string constant with no interpolation and no user, URL, or network input, so nothing attacker-controlled can reach it. Inputs are schema-validated server-side.
 - **Clickjacking** is blocked by `X-Frame-Options: DENY` and CSP `frame-ancestors 'none'`.
 - **No verbose errors in production.** Unhandled errors render branded `error` / `global-error` / `not-found` boundaries with a reference digest only; stack traces are not shown to users.
 
