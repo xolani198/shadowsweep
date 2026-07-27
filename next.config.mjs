@@ -5,9 +5,11 @@ const isDev = process.env.NODE_ENV === "development";
 const contentSecurityPolicy = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "font-src 'self' https://fonts.gstatic.com",
+  // Fonts are self-hosted via next/font; inline style attributes still need 'unsafe-inline'.
+  "style-src 'self' 'unsafe-inline'",
+  "font-src 'self'",
   "img-src 'self' data: blob:",
+  // Stripe Checkout/Portal are full-page redirects, so no extra connect-src is needed.
   "connect-src 'self'",
   "object-src 'none'",
   "base-uri 'self'",

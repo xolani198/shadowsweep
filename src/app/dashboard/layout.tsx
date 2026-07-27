@@ -1,11 +1,13 @@
 // FILE: src/app/dashboard/layout.tsx
-import Sidebar from "@/components/layout/Sidebar";
+import type { Metadata } from "next";
+import DashboardShell from "@/components/layout/DashboardShell";
+
+// A title template only applies one segment down, so the dashboard restates it
+// for its own children; otherwise nested pages lose the brand suffix.
+export const metadata: Metadata = {
+  title: { default: "Dashboard", template: "%s · ShadowSweep" },
+};
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex h-screen overflow-hidden bg-[var(--color-bg)]">
-      <Sidebar />
-      <main className="flex-1 overflow-y-auto">{children}</main>
-    </div>
-  );
+  return <DashboardShell>{children}</DashboardShell>;
 }

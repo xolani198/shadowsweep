@@ -1,17 +1,54 @@
 "use client";
 
 import { useState } from "react";
-import { Building2, Users, Plug } from "lucide-react";
+import { Building2, Users, Plug, Save, ShieldCheck } from "lucide-react";
 import TopBar from "@/components/layout/TopBar";
-import { INTEGRATIONS, Integration } from "@/lib/mockData";
+import Button from "@/components/ui/Button";
+import { useToast } from "@/components/ui/Toast";
+import SecurityEvents from "@/components/dashboard/SecurityEvents";
+import { INTEGRATIONS, Integration } from "@/lib/data";
+import { BILLING_ENABLED } from "@/lib/config";
+
+const ORG_DEFAULTS = { name: "Acme Corp", email: "admin@acmecorp.io" };
 
 export default function SettingsPage() {
+  const { toast } = useToast();
   const [integrations, setIntegrations] = useState<Integration[]>(INTEGRATIONS);
 
-  function toggleIntegration(id: string) {
+  const [orgName, setOrgName] = useState(ORG_DEFAULTS.name);
+  const [adminEmail, setAdminEmail] = useState(ORG_DEFAULTS.email);
+  const [saving, setSaving] = useState(false);
+
+  const dirty = orgName !== ORG_DEFAULTS.name || adminEmail !== ORG_DEFAULTS.email;
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(adminEmail);
+
+  function saveWorkspace() {
+    if (!emailValid) {
+      toast({ variant: "error", title: "Invalid admin email", description: "Enter a valid email address." });
+      return;
+    }
+    setSaving(true);
+    // Demo persistence: simulate a save round-trip. Wire to a real API in production.
+    setTimeout(() => {
+      setSaving(false);
+      ORG_DEFAULTS.name = orgName;
+      ORG_DEFAULTS.email = adminEmail;
+      toast({ variant: "success", title: "Workspace saved", description: "Your changes have been applied." });
+    }, 700);
+  }
+
+  function toggleIntegration(integration: Integration) {
+    const next = !integration.connected;
     setIntegrations((prev) =>
-      prev.map((i) => (i.id === id ? { ...i, connected: !i.connected } : i))
+      prev.map((i) => (i.id === integration.id ? { ...i, connected: next } : i))
     );
+    toast({
+      variant: next ? "success" : "info",
+      title: next ? `${integration.name} connected` : `${integration.name} disconnected`,
+      description: next
+        ? "Discovery will include this source on the next sync."
+        : "This source will no longer be scanned.",
+    });
   }
 
   return (
@@ -28,21 +65,29 @@ export default function SettingsPage() {
             </h2>
           </div>
           <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] divide-y divide-[var(--color-border)]">
-            <Row label="Organization name">
+            <Row label="Organization name" htmlFor="org-name">
               <input
-                defaultValue="Acme Corp"
-                className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-1.5 text-[13px] text-[var(--color-text-primary)] focus:border-[var(--color-accent)] focus:outline-none w-56"
+                id="org-name"
+                value={orgName}
+                onChange={(e) => setOrgName(e.target.value)}
+                className="w-56 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-1.5 text-[13px] text-[var(--color-text-primary)] focus:border-[var(--color-accent)] focus:outline-none"
               />
             </Row>
-            <Row label="Admin email">
+            <Row label="Admin email" htmlFor="admin-email">
               <input
-                defaultValue="admin@acmecorp.io"
-                className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-1.5 text-[13px] font-mono-data text-[var(--color-text-primary)] focus:border-[var(--color-accent)] focus:outline-none w-56"
+                id="admin-email"
+                type="email"
+                value={adminEmail}
+                onChange={(e) => setAdminEmail(e.target.value)}
+                aria-invalid={!emailValid}
+                className={`font-mono-data w-56 rounded-lg border bg-[var(--color-bg)] px-3 py-1.5 text-[13px] text-[var(--color-text-primary)] focus:outline-none ${
+                  emailValid ? "border-[var(--color-border)] focus:border-[var(--color-accent)]" : "border-[var(--color-danger)]"
+                }`}
               />
             </Row>
             <Row label="Plan">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--color-accent)] px-3 py-1 text-[11.5px] font-bold text-white">
-                Pro
+                {BILLING_ENABLED ? "Pro" : "Free"}
               </span>
             </Row>
             <Row label="Members">
@@ -51,6 +96,18 @@ export default function SettingsPage() {
                 <span>5 active members</span>
               </div>
             </Row>
+          </div>
+          <div className="mt-3 flex justify-end">
+            <Button
+              variant="primary"
+              size="sm"
+              icon={<Save size={13} />}
+              loading={saving}
+              disabled={!dirty || saving}
+              onClick={saveWorkspace}
+            >
+              {saving ? "Saving…" : "Save changes"}
+            </Button>
           </div>
         </section>
 
@@ -87,7 +144,8 @@ export default function SettingsPage() {
                 <button
                   role="switch"
                   aria-checked={integration.connected}
-                  onClick={() => toggleIntegration(integration.id)}
+                  aria-label={`${integration.connected ? "Disconnect" : "Connect"} ${integration.name}`}
+                  onClick={() => toggleIntegration(integration)}
                   className={`relative h-6 w-11 flex-shrink-0 rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] ${
                     integration.connected
                       ? "bg-[var(--color-accent)]"
@@ -104,15 +162,36 @@ export default function SettingsPage() {
             ))}
           </div>
         </section>
+
+        {/* Section 3: Security */}
+        <section>
+          <div className="mb-4 flex items-center gap-2">
+            <ShieldCheck size={15} className="text-[var(--color-accent)]" />
+            <h2 className="text-[14px] font-bold text-[var(--color-text-primary)] uppercase tracking-wider">
+              Security
+            </h2>
+          </div>
+          <SecurityEvents />
+        </section>
       </div>
     </div>
   );
 }
 
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
+function Row({
+  label,
+  htmlFor,
+  children,
+}: {
+  label: string;
+  htmlFor?: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="flex items-center justify-between px-5 py-3.5">
-      <span className="text-[13.5px] text-[var(--color-text-secondary)]">{label}</span>
+      <label htmlFor={htmlFor} className="text-[13.5px] text-[var(--color-text-secondary)]">
+        {label}
+      </label>
       {children}
     </div>
   );

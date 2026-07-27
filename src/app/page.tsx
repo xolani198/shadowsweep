@@ -13,109 +13,128 @@ import {
   ArrowRight,
   Play,
   Users,
-  Timer,
-  Globe,
-  DollarSign,
   Radar,
   FileCheck,
   ShieldCheck,
   Headphones,
-  ChevronLeft,
-  ChevronRight,
   LayoutDashboard,
   Bell,
   Settings,
-  Boxes,
-  Aperture,
-  Cloud,
-  Compass,
-  Feather,
+  DollarSign,
 } from "lucide-react";
 import ThemeToggle from "@/components/layout/ThemeToggle";
 import Logo from "@/components/layout/Logo";
+import { BILLING_ENABLED } from "@/lib/config";
 
 /* ── Content ─────────────────────────────────────────────────────────────── */
 
 const SERVICES = [
   {
     icon: Search,
-    title: "Instant App Discovery",
-    desc: "Connect identity, spend, and billing systems to surface every unauthorized SaaS tool in minutes.",
+    title: "App discovery",
+    desc: "Connect identity, spend, and billing systems to list every unauthorized SaaS tool your team is using.",
   },
   {
     icon: TrendingDown,
-    title: "Spend Forensics",
-    desc: "Pinpoint exactly how much waste each shadow app is burning — real dollar figures, per employee.",
+    title: "Spend forensics",
+    desc: "See the monthly cost of every shadow app, traced to the employee and the card that pays for it.",
   },
   {
     icon: Zap,
-    title: "One-Click Offboarding",
-    desc: "Revoke all shadow IT access for departing employees with auto-generated compliance templates.",
+    title: "One-click offboarding",
+    desc: "Revoke tokens, cancel subscriptions, and generate a GDPR/CCPA deletion request in a single action.",
   },
   {
     icon: Lock,
-    title: "Continuous Monitoring",
-    desc: "Real-time risk scoring and alerts when employees connect new apps with sensitive data scopes.",
+    title: "Continuous monitoring",
+    desc: "Risk scoring and alerts when an employee connects a new app with access to sensitive data.",
   },
 ];
 
-const STATS = [
-  { icon: Users,      value: "500+",   label: "IT teams protected" },
-  { icon: DollarSign, value: "$4.2M",  label: "Shadow spend recovered" },
-  { icon: Timer,      value: "12 min", label: "Avg. discovery time" },
-  { icon: Globe,      value: "99.9%",  label: "Uptime delivered" },
+/* Real connectors the product reads from. */
+const SOURCES = ["Google Workspace", "Microsoft 365", "Ramp", "Brex", "Stripe"];
+
+/* Capability facts, not customer counts. */
+const CAPABILITIES = [
+  { icon: Search, title: "Every app, surfaced", desc: "OAuth grants plus card and billing charges, joined into one list." },
+  { icon: DollarSign, title: "Real spend, per app", desc: "Monthly cost traced to the employee and card behind it." },
+  { icon: FileCheck, title: "Compliance on tap", desc: "GDPR Article 17 and CCPA deletion requests per offboard." },
+  { icon: ShieldCheck, title: "Signed audit trail", desc: "Every revoke written to a tamper-evident log." },
+];
+
+const STEPS = [
+  {
+    n: "01",
+    title: "Connect",
+    desc: "Link Google Workspace, Microsoft 365, Ramp, Brex, or Stripe over OAuth. Nothing to install on endpoints.",
+  },
+  {
+    n: "02",
+    title: "Discover",
+    desc: "We correlate grants and charges into one list: every app, its monthly cost, and the data it can reach.",
+  },
+  {
+    n: "03",
+    title: "Offboard",
+    desc: "Revoke tokens, cancel subscriptions, and generate a deletion request in one click. Evidence is logged.",
+  },
 ];
 
 const WHY_US = [
   {
     icon: Radar,
-    title: "Expert-Grade Discovery",
-    desc: "OAuth grants, card statements, and billing data correlated automatically.",
+    title: "Correlated discovery",
+    desc: "OAuth grants, card statements, and billing data joined into one view, not three spreadsheets.",
   },
   {
     icon: FileCheck,
-    title: "Compliance Built-In",
-    desc: "GDPR Article 17 and CCPA deletion templates generated for every offboarding.",
+    title: "Compliance built in",
+    desc: "GDPR Article 17 and CCPA deletion requests generated for every offboard.",
   },
   {
     icon: ShieldCheck,
-    title: "SOC 2 & GDPR Ready",
-    desc: "Hardened security headers, signed sessions, and full audit logging.",
+    title: "Hardened by default",
+    desc: "Signed sessions, strict security headers, CSRF checks, and full audit logging.",
   },
   {
     icon: Headphones,
-    title: "Dedicated Support",
-    desc: "A named CSM and same-day response on every enterprise plan.",
+    title: "Founder-led support",
+    desc: "Talk to the people who built it, not a ticket queue.",
   },
 ];
 
 const PLANS = [
   {
+    id: "starter",
     name: "Starter",
     monthlyPrice: 15,
     yearlyPrice: 50,
-    desc: "For lean IT teams getting started with Shadow IT visibility.",
+    desc: "For lean IT teams getting started with shadow IT visibility.",
     features: ["Up to 25 employees", "3 integrations", "Email alerts", "7-day history"],
     highlighted: false,
     cta: "Start free trial",
+    checkout: true,
   },
   {
+    id: "pro",
     name: "Pro",
     monthlyPrice: 49,
     yearlyPrice: 149,
-    desc: "Full-power auditing and automated offboarding for growing orgs.",
+    desc: "Full auditing and automated offboarding for growing orgs.",
     features: [
       "Up to 200 employees",
       "Unlimited integrations",
       "One-click offboarding",
       "Compliance email templates",
-      "Slack & Teams alerts",
+      "Slack and Teams alerts",
       "90-day audit log",
     ],
     highlighted: true,
     cta: "Start free trial",
+    checkout: true,
   },
   {
+    id: "enterprise",
     name: "Enterprise",
     monthlyPrice: 149,
     yearlyPrice: 499,
@@ -130,18 +149,11 @@ const PLANS = [
     ],
     highlighted: false,
     cta: "Contact sales",
+    checkout: false,
   },
 ];
 
-const TRUSTED_BY = [
-  { icon: Boxes,    name: "Altivon" },
-  { icon: Aperture, name: "Pinnacle" },
-  { icon: Cloud,    name: "CloudSphere" },
-  { icon: Compass,  name: "Vertexa" },
-  { icon: Feather,  name: "BrightPath" },
-];
-
-/* ── Motion presets — restrained, easing out, run once ───────────────────── */
+/* ── Motion presets: restrained, easing out, run once ────────────────────── */
 
 const sectionReveal = {
   initial: { opacity: 0, y: 24 },
@@ -150,7 +162,7 @@ const sectionReveal = {
   transition: { duration: 0.55, ease: "easeOut" as const },
 };
 
-/* ── Hero dashboard mockup (pure HTML, no screenshot) ────────────────────── */
+/* ── Hero dashboard mockup (hand-built, mirrors the live demo data) ───────── */
 
 function DashboardMockup() {
   const MOCK_NAV = [
@@ -161,7 +173,7 @@ function DashboardMockup() {
     { icon: Settings,        label: "Settings" },
   ];
   const ACTIVITY = [
-    { dot: "#DC2626", text: "Mailchimp detected — critical",   time: "2m" },
+    { dot: "#DC2626", text: "Mailchimp detected, critical",    time: "2m" },
     { dot: "#1D63ED", text: "Cloudflare tokens revoked",        time: "15m" },
     { dot: "#067647", text: "Audit log updated",                time: "1h" },
     { dot: "#B54708", text: "Spend anomaly: +34% this month",   time: "2h" },
@@ -196,11 +208,11 @@ function DashboardMockup() {
       <div className="flex-1 bg-[#F6F8FB] p-3">
         <div className="mb-2.5 flex items-center justify-between">
           <div>
-            <p className="text-[10px] font-bold text-[#0B1F3A]">Welcome back, Alex</p>
-            <p className="text-[7.5px] text-[#7186A0]">Here&apos;s what changed in your SaaS stack today.</p>
+            <p className="text-[10px] font-bold text-[#0B1F3A]">Command dashboard</p>
+            <p className="text-[7.5px] text-[#7186A0]">Real-time shadow IT overview for Acme Corp.</p>
           </div>
           <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#081A33] text-[7px] font-bold text-white">
-            AM
+            AC
           </div>
         </div>
 
@@ -218,7 +230,7 @@ function DashboardMockup() {
               </svg>
               <div>
                 <p className="font-mono-data text-[13px] font-semibold text-[#0B1F3A]">74<span className="text-[8px] text-[#7186A0]">/100</span></p>
-                <p className="text-[7px] text-[#B42318]">High — action required</p>
+                <p className="text-[7px] text-[#B42318]">High, action required</p>
               </div>
             </div>
           </div>
@@ -272,9 +284,9 @@ export default function LandingPage() {
 
           <div className="hidden items-center gap-8 md:flex">
             {[
-              { label: "Services",  href: "#services" },
+              { label: "Product",   href: "#services" },
               { label: "Why us",    href: "#why-us" },
-              { label: "Pricing",   href: "#pricing" },
+              ...(BILLING_ENABLED ? [{ label: "Pricing", href: "#pricing" }] : []),
               { label: "Live demo", href: "/dashboard" },
             ].map(({ label, href }) => (
               <a
@@ -293,13 +305,13 @@ export default function LandingPage() {
               href="/auth"
               className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent)] px-5 py-2.5 text-[13px] font-semibold text-white transition hover:bg-[var(--color-accent-hover)]"
             >
-              Get a Free Audit <ArrowRight size={14} />
+              Get a free audit <ArrowRight size={14} />
             </Link>
           </div>
         </div>
       </nav>
 
-      {/* ── Hero — copy left, product mockup right ──────────────────────── */}
+      {/* ── Hero: copy left, product mockup right ───────────────────────── */}
       <section className="mx-auto grid max-w-6xl items-center gap-12 px-6 pb-20 pt-32 lg:grid-cols-2">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -307,16 +319,16 @@ export default function LandingPage() {
           transition={{ duration: 0.55, ease: "easeOut" }}
         >
           <p className="micro-label mb-4 !text-[var(--color-accent)]">
-            Smart Shadow IT control for a digital world
+            OAuth grants, card spend, and billing in one view
           </p>
           <h1 className="text-[38px] font-extrabold leading-[1.12] tracking-tight md:text-[46px]">
-            Total SaaS Visibility.
+            Find the SaaS you
             <br />
-            Built Around Your <span className="text-[var(--color-accent)]">Control.</span>
+            don&apos;t know about. <span className="text-[var(--color-accent)]">Shut it down.</span>
           </h1>
           <p className="mt-5 max-w-md text-[15px] leading-relaxed text-[var(--color-text-secondary)]">
-            From discovery to offboarding, ShadowSweep connects your identity, spend, and
-            billing tools to find every unauthorized app — and revoke it in one click.
+            ShadowSweep correlates your identity provider, corporate cards, and billing to surface
+            every app employees signed up for, then revokes access the day they leave.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -324,23 +336,26 @@ export default function LandingPage() {
               href="/auth"
               className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent)] px-6 py-3 text-[13.5px] font-semibold text-white transition hover:bg-[var(--color-accent-hover)]"
             >
-              Explore the Platform <ArrowRight size={15} />
+              Get a free audit <ArrowRight size={15} />
             </Link>
             <Link
               href="/dashboard"
               className="inline-flex items-center gap-2 rounded-lg border border-[var(--color-border-strong)] px-6 py-3 text-[13.5px] font-semibold text-[var(--color-text-primary)] transition hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
             >
-              <Play size={13} className="fill-current" /> Watch the Demo
+              <Play size={13} className="fill-current" /> Open the live demo
             </Link>
           </div>
 
-          {/* Trusted-by strip */}
+          {/* Connectors */}
           <div className="mt-12">
-            <p className="micro-label mb-4">Trusted by forward-thinking IT teams</p>
-            <div className="flex flex-wrap items-center gap-x-7 gap-y-3">
-              {TRUSTED_BY.map(({ icon: Icon, name }) => (
-                <span key={name} className="flex items-center gap-1.5 text-[13.5px] font-semibold text-[var(--color-text-muted)]">
-                  <Icon size={15} strokeWidth={1.75} /> {name}
+            <p className="micro-label mb-4">Connects with the tools you already run</p>
+            <div className="flex flex-wrap items-center gap-2">
+              {SOURCES.map((name) => (
+                <span
+                  key={name}
+                  className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-2.5 py-1 text-[12px] font-semibold text-[var(--color-text-secondary)]"
+                >
+                  {name}
                 </span>
               ))}
             </div>
@@ -356,75 +371,80 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      {/* ── Services ────────────────────────────────────────────────────── */}
+      {/* ── Product: editorial heading + feature list ───────────────────── */}
       <section id="services" className="bg-[var(--color-surface-2)] py-20">
-        <div className="mx-auto max-w-6xl px-6">
-          <motion.div {...sectionReveal} className="mb-12 text-center">
-            <p className="micro-label mb-3 !text-[var(--color-accent)]">What we do</p>
-            <h2 className="text-[28px] font-extrabold tracking-tight">End-to-End Shadow IT Control</h2>
-            <p className="mx-auto mt-3 max-w-lg text-[13.5px] text-[var(--color-text-secondary)]">
-              Comprehensive coverage designed to expose your full SaaS footprint and keep it governed.
+        <div className="mx-auto grid max-w-6xl gap-12 px-6 lg:grid-cols-[0.85fr_1.15fr]">
+          <motion.div {...sectionReveal}>
+            <p className="micro-label mb-3 !text-[var(--color-accent)]">What it does</p>
+            <h2 className="text-[28px] font-extrabold leading-tight tracking-tight">
+              Discover, price, and revoke
+            </h2>
+            <p className="mt-3 max-w-sm text-[13.5px] leading-relaxed text-[var(--color-text-secondary)]">
+              We read identity-provider grants, corporate-card spend, and billing data, so no app
+              runs without IT knowing what it costs and what it can touch.
             </p>
+            <Link
+              href="/dashboard"
+              className="mt-5 inline-flex items-center gap-1.5 text-[13px] font-semibold text-[var(--color-accent)] hover:underline"
+            >
+              Open the live demo <ArrowRight size={13} />
+            </Link>
           </motion.div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="border-t border-[var(--color-border)]">
             {SERVICES.map(({ icon: Icon, title, desc }, i) => (
               <motion.div
                 key={title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.45, ease: "easeOut", delay: i * 0.08 }}
-                className="flex flex-col rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 transition hover:border-[var(--color-accent)]"
+                transition={{ duration: 0.4, ease: "easeOut", delay: i * 0.06 }}
+                className="flex gap-4 border-b border-[var(--color-border)] py-5"
               >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-accent-subtle)]">
-                  <Icon size={20} strokeWidth={1.75} className="text-[var(--color-accent)]" />
+                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-[var(--color-accent-subtle)]">
+                  <Icon size={17} strokeWidth={1.75} className="text-[var(--color-accent)]" />
                 </div>
-                <h3 className="mb-2 text-[14.5px] font-bold">{title}</h3>
-                <p className="flex-1 text-[12.5px] leading-relaxed text-[var(--color-text-secondary)]">{desc}</p>
-                <Link
-                  href="/dashboard"
-                  className="mt-4 inline-flex items-center gap-1 text-[12.5px] font-semibold text-[var(--color-accent)] hover:underline"
-                >
-                  Learn More <ArrowRight size={12} />
-                </Link>
+                <div>
+                  <h3 className="text-[14.5px] font-bold">{title}</h3>
+                  <p className="mt-1 text-[13px] leading-relaxed text-[var(--color-text-secondary)]">{desc}</p>
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Stats band — navy rounded container ─────────────────────────── */}
+      {/* ── Capabilities band: navy rounded container ───────────────────── */}
       <section className="mx-auto max-w-6xl px-6 py-16">
         <motion.div
           {...sectionReveal}
-          className="grid grid-cols-2 overflow-hidden rounded-2xl md:grid-cols-4"
+          className="grid grid-cols-1 overflow-hidden rounded-2xl sm:grid-cols-2 lg:grid-cols-4"
           style={{ background: "var(--color-nav-bg)" }}
         >
-          {STATS.map(({ icon: Icon, value, label }, i) => (
+          {CAPABILITIES.map(({ icon: Icon, title, desc }, i) => (
             <div
-              key={value}
-              className="flex items-center gap-4 px-7 py-8"
+              key={title}
+              className="px-7 py-7"
               style={{ borderLeft: i > 0 ? "1px solid var(--color-nav-border)" : "none" }}
             >
-              <Icon size={22} strokeWidth={1.5} style={{ color: "var(--color-nav-accent)" }} className="hidden flex-shrink-0 sm:block" />
-              <div>
-                <p className="font-mono-data text-[24px] font-semibold leading-tight text-white">{value}</p>
-                <p className="text-[11.5px]" style={{ color: "var(--color-nav-text)" }}>{label}</p>
-              </div>
+              <Icon size={20} strokeWidth={1.75} style={{ color: "var(--color-nav-accent)" }} />
+              <p className="mt-3 text-[14px] font-bold text-white">{title}</p>
+              <p className="mt-1 text-[11.5px] leading-relaxed" style={{ color: "var(--color-nav-text)" }}>
+                {desc}
+              </p>
             </div>
           ))}
         </motion.div>
       </section>
 
-      {/* ── Why choose us + case study ──────────────────────────────────── */}
+      {/* ── Why us + how a scan works ───────────────────────────────────── */}
       <section id="why-us" className="mx-auto grid max-w-6xl gap-12 px-6 pb-20 lg:grid-cols-2">
         <motion.div {...sectionReveal}>
-          <p className="micro-label mb-3 !text-[var(--color-accent)]">Why choose us</p>
+          <p className="micro-label mb-3 !text-[var(--color-accent)]">Why teams pick us</p>
           <h2 className="text-[26px] font-extrabold tracking-tight">Visibility. Compliance. Control.</h2>
           <p className="mt-3 max-w-md text-[13.5px] leading-relaxed text-[var(--color-text-secondary)]">
-            We combine deep discovery coverage with a security-first architecture to deliver
-            governance IT leaders can stand behind.
+            Every offboard writes a signed audit-log entry and a GDPR Article 17 deletion request.
+            Evidence your auditors accept, generated as you work.
           </p>
           <div className="mt-8 grid gap-x-8 gap-y-7 sm:grid-cols-2">
             {WHY_US.map(({ icon: Icon, title, desc }) => (
@@ -441,67 +461,69 @@ export default function LandingPage() {
           </div>
         </motion.div>
 
-        {/* Case study card */}
+        {/* How a scan works */}
         <motion.div
           {...sectionReveal}
           className="flex flex-col rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7 shadow-xs"
         >
           <div className="mb-6 flex items-center justify-between">
-            <span className="flex items-center gap-2 text-[14px] font-bold">
-              <Aperture size={16} className="text-[var(--color-text-muted)]" /> Pinnacle
-            </span>
-            <div className="flex items-center gap-3">
-              <span className="micro-label">Case study</span>
-              <div className="flex gap-1.5">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full border border-[var(--color-border)] text-[var(--color-text-muted)]">
-                  <ChevronLeft size={13} />
-                </span>
-                <span className="flex h-6 w-6 items-center justify-center rounded-full border border-[var(--color-border)] text-[var(--color-text-muted)]">
-                  <ChevronRight size={13} />
-                </span>
-              </div>
-            </div>
+            <span className="text-[14px] font-bold">How a scan works</span>
+            <span className="micro-label">No agents</span>
           </div>
 
-          <blockquote className="text-[16px] font-semibold leading-relaxed">
-            &ldquo;ShadowSweep surfaced 64 unsanctioned apps in our first scan and helped us
-            cut SaaS waste by 40% in a single quarter — with zero offboarding gaps.&rdquo;
-          </blockquote>
-
-          <div className="mt-5 flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-nav-bg)] text-[11px] font-bold text-white">
-              SM
-            </div>
-            <div>
-              <p className="text-[13px] font-bold">Sarah Mitchell</p>
-              <p className="text-[11.5px] text-[var(--color-text-muted)]">CTO, Pinnacle Solutions</p>
-            </div>
-          </div>
-
-          <div className="mt-6 grid grid-cols-3 gap-4 border-t border-[var(--color-border)] pt-6">
-            {[
-              { icon: TrendingDown, value: "40%",  label: "Cost savings" },
-              { icon: Search,       value: "64",   label: "Apps discovered" },
-              { icon: ShieldCheck,  value: "100%", label: "Offboarding coverage" },
-            ].map(({ icon: Icon, value, label }) => (
-              <div key={label} className="text-center">
-                <Icon size={16} strokeWidth={1.75} className="mx-auto mb-1.5 text-[var(--color-accent)]" />
-                <p className="font-mono-data text-[18px] font-semibold">{value}</p>
-                <p className="text-[10.5px] text-[var(--color-text-muted)]">{label}</p>
+          <div className="flex-1 space-y-6">
+            {STEPS.map((step) => (
+              <div key={step.n} className="flex gap-4">
+                <span className="font-mono-data flex-shrink-0 text-[13px] font-semibold text-[var(--color-accent)]">
+                  {step.n}
+                </span>
+                <div>
+                  <h3 className="text-[14px] font-bold">{step.title}</h3>
+                  <p className="mt-1 text-[12.5px] leading-relaxed text-[var(--color-text-secondary)]">{step.desc}</p>
+                </div>
               </div>
             ))}
           </div>
 
           <Link
             href="/dashboard"
-            className="mt-6 inline-flex items-center justify-center gap-1.5 text-[12.5px] font-semibold text-[var(--color-accent)] hover:underline"
+            className="mt-7 inline-flex items-center justify-center gap-1.5 rounded-lg bg-[var(--color-accent)] py-2.5 text-[13px] font-semibold text-white transition hover:bg-[var(--color-accent-hover)]"
           >
-            Read Full Case Study <ArrowRight size={12} />
+            Run it on the demo data <ArrowRight size={13} />
           </Link>
         </motion.div>
       </section>
 
+      {/* ── Free while billing is off ───────────────────────────────────── */}
+      {!BILLING_ENABLED && (
+        <section className="bg-[var(--color-surface-2)] py-20">
+          <motion.div {...sectionReveal} className="mx-auto max-w-2xl px-6 text-center">
+            <p className="micro-label mb-3 !text-[var(--color-accent)]">Pricing</p>
+            <h2 className="text-[28px] font-extrabold tracking-tight">Free while we are in beta</h2>
+            <p className="mx-auto mt-3 max-w-lg text-[13.5px] leading-relaxed text-[var(--color-text-secondary)]">
+              Every feature is available at no cost, with no card required. We will give existing
+              teams notice before that changes.
+            </p>
+            <div className="mt-7 flex flex-wrap justify-center gap-3">
+              <Link
+                href="/auth"
+                className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent)] px-6 py-3 text-[13.5px] font-semibold text-white transition hover:bg-[var(--color-accent-hover)]"
+              >
+                Get started free <ArrowRight size={15} />
+              </Link>
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-2 rounded-lg border border-[var(--color-border-strong)] px-6 py-3 text-[13.5px] font-semibold text-[var(--color-text-primary)] transition hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+              >
+                Open the live demo
+              </Link>
+            </div>
+          </motion.div>
+        </section>
+      )}
+
       {/* ── Pricing ─────────────────────────────────────────────────────── */}
+      {BILLING_ENABLED && (
       <section id="pricing" className="bg-[var(--color-surface-2)] py-20">
         <div className="mx-auto max-w-6xl px-6">
           <motion.div {...sectionReveal} className="mb-10 text-center">
@@ -525,7 +547,7 @@ export default function LandingPage() {
                   {b === "yearly" ? "Yearly" : "Monthly"}
                   {b === "yearly" && (
                     <span className={`text-[10px] font-bold ${billing === b ? "text-white/80" : "text-[var(--color-success)]"}`}>
-                      −66%
+                      Save more
                     </span>
                   )}
                 </button>
@@ -560,7 +582,7 @@ export default function LandingPage() {
                     </span>
                     {plan.highlighted && (
                       <span className="rounded-full bg-[var(--color-accent)] px-2.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wide text-white">
-                        Most popular
+                        Recommended
                       </span>
                     )}
                   </div>
@@ -592,7 +614,11 @@ export default function LandingPage() {
                     ))}
                   </ul>
                   <Link
-                    href="/auth"
+                    href={
+                      plan.checkout
+                        ? `/dashboard/billing?plan=${plan.id}&interval=${billing}`
+                        : "mailto:sales@shadowsweep.app?subject=ShadowSweep%20Enterprise"
+                    }
                     className={`mt-auto block rounded-lg py-2.5 text-center text-[13px] font-semibold transition ${
                       plan.highlighted
                         ? "bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent-hover)]"
@@ -607,8 +633,9 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+      )}
 
-      {/* ── CTA band — navy rounded container ───────────────────────────── */}
+      {/* ── CTA band: navy rounded container ────────────────────────────── */}
       <section className="mx-auto max-w-6xl px-6 py-16">
         <motion.div
           {...sectionReveal}
@@ -624,10 +651,10 @@ export default function LandingPage() {
             </div>
             <div>
               <h2 className="text-[22px] font-extrabold tracking-tight text-white">
-                Ready to take back your SaaS stack?
+                See what your stack is hiding
               </h2>
               <p className="mt-1 text-[13px]" style={{ color: "var(--color-nav-text)" }}>
-                Run your first discovery scan in under 12 minutes — no agents to install.
+                Connect a source and run your first scan in minutes. No agents to install.
               </p>
             </div>
           </div>
@@ -636,13 +663,13 @@ export default function LandingPage() {
               href="/auth"
               className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent)] px-6 py-3 text-[13.5px] font-semibold text-white transition hover:bg-[var(--color-accent-hover)]"
             >
-              Get a Free Audit <ArrowRight size={15} />
+              Get a free audit <ArrowRight size={15} />
             </Link>
             <Link
               href="/dashboard"
               className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-[13.5px] font-semibold text-[#081A33] transition hover:bg-slate-100"
             >
-              View Live Demo
+              Open the live demo
             </Link>
           </div>
         </motion.div>
@@ -652,8 +679,15 @@ export default function LandingPage() {
       <footer style={{ background: "var(--color-nav-bg)", borderTop: "1px solid var(--color-nav-border)" }}>
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-8">
           <Logo size={24} textClassName="text-white" />
+          <div className="flex flex-wrap items-center gap-5 text-[12px]" style={{ color: "var(--color-nav-text)" }}>
+            <Link href="/legal/terms" className="hover:text-white">Terms</Link>
+            <Link href="/legal/privacy" className="hover:text-white">Privacy</Link>
+            {BILLING_ENABLED && (
+              <Link href="/legal/refund" className="hover:text-white">Refunds</Link>
+            )}
+          </div>
           <p className="text-[12px]" style={{ color: "var(--color-nav-text)" }}>
-            © {new Date().getFullYear()} ShadowSweep · SOC 2 Type II · GDPR & CCPA ready
+            © {new Date().getFullYear()} ShadowSweep · GDPR and CCPA deletion workflows built in
           </p>
         </div>
       </footer>

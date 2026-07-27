@@ -6,7 +6,7 @@ import MetricsBanner from "@/components/dashboard/MetricsBanner";
 import AlertsFeed from "@/components/dashboard/AlertsFeed";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
-import { EMPLOYEES, DISCOVERY_ROWS, DiscoveryRow } from "@/lib/mockData";
+import { EMPLOYEES, DISCOVERY_ROWS, DiscoveryRow } from "@/lib/data";
 
 const RISK_RANK: Record<DiscoveryRow["riskLevel"], number> = {
   critical: 0,
@@ -29,9 +29,9 @@ export default function DashboardPage() {
       {/* Metrics */}
       <MetricsBanner />
 
-      {/* Tiered Horizon Stack — three-column layout */}
+      {/* Tiered Horizon Stack: three-column layout */}
       <div className="grid flex-1 gap-5 px-6 pb-8 lg:grid-cols-[300px_1fr_340px]">
-        {/* Left: core directories — at-risk employees */}
+        {/* Left: core directories, at-risk employees */}
         <div className="flex flex-col gap-4">
           {/* Departing employees */}
           <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
@@ -73,11 +73,12 @@ export default function DashboardPage() {
               <h3 className="text-[14px] font-bold text-[var(--color-text-primary)]">Top Shadow Spenders</h3>
             </div>
             <ul className="divide-y divide-[var(--color-border)]">
-              {EMPLOYEES.sort(
-                (a, b) =>
-                  b.shadowApps.reduce((s, x) => s + x.monthlySpend, 0) -
-                  a.shadowApps.reduce((s, x) => s + x.monthlySpend, 0)
-              )
+              {[...EMPLOYEES]
+                .sort(
+                  (a, b) =>
+                    b.shadowApps.reduce((s, x) => s + x.monthlySpend, 0) -
+                    a.shadowApps.reduce((s, x) => s + x.monthlySpend, 0)
+                )
                 .slice(0, 4)
                 .map((emp) => {
                   const spend = emp.shadowApps.reduce((s, x) => s + x.monthlySpend, 0);

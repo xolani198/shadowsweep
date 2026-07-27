@@ -7,8 +7,12 @@ import {
   Users,
   Bell,
   Settings,
+  CreditCard,
+  LogOut,
 } from "lucide-react";
-import { METRICS } from "@/lib/mockData";
+import { METRICS } from "@/lib/data";
+import { BILLING_ENABLED } from "@/lib/config";
+import { useMobileNav } from "@/contexts/MobileNavContext";
 import Logo from "./Logo";
 
 const NAV = [
@@ -16,11 +20,24 @@ const NAV = [
   { href: "/dashboard/discovery", label: "Discovery", icon: Search },
   { href: "/dashboard/employees", label: "Employees", icon: Users },
   { href: "/dashboard/alerts",    label: "Alerts",    icon: Bell, badge: METRICS.criticalAlerts },
+  // Billing only appears once billing is switched on.
+  ...(BILLING_ENABLED
+    ? [{ href: "/dashboard/billing", label: "Billing", icon: CreditCard }]
+    : []),
   { href: "/dashboard/settings",  label: "Settings",  icon: Settings },
 ];
 
 export default function Sidebar() {
   const path = usePathname();
+  const { open, setOpen } = useMobileNav();
+
+  async function signOut() {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } finally {
+      window.location.href = "/";
+    }
+  }
 
   function isActive(href: string, exact?: boolean) {
     if (href === "/dashboard/employees") return path.startsWith("/dashboard/employee");
@@ -29,9 +46,12 @@ export default function Sidebar() {
   }
 
   return (
-    /* Structural navy — constant across light/dark themes */
+    /* Structural navy, constant across light/dark themes.
+       Static column on md+, off-canvas drawer on mobile. */
     <aside
-      className="flex h-screen w-56 flex-shrink-0 flex-col"
+      className={`fixed inset-y-0 left-0 z-50 flex h-screen w-56 flex-shrink-0 flex-col transition-transform duration-200 ease-out md:static md:translate-x-0 ${
+        open ? "translate-x-0 shadow-elevated" : "-translate-x-full"
+      }`}
       style={{ background: "var(--color-nav-bg)", borderRight: "1px solid var(--color-nav-border)" }}
     >
       {/* Logo */}
@@ -54,7 +74,12 @@ export default function Sidebar() {
         {NAV.map(({ href, label, icon: Icon, exact, badge }) => {
           const active = isActive(href, exact);
           return (
-            <Link key={href} href={href} className={`nav-item ${active ? "nav-item-active" : ""}`}>
+            <Link
+              key={href}
+              href={href}
+              onClick={() => setOpen(false)}
+              className={`nav-item ${active ? "nav-item-active" : ""}`}
+            >
               <Icon
                 size={15}
                 strokeWidth={active ? 2.25 : 1.75}
@@ -83,14 +108,23 @@ export default function Sidebar() {
           >
             AC
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="truncate text-[12px] font-semibold" style={{ color: "var(--color-nav-text-active)" }}>
               Acme Corp
             </p>
             <p className="truncate font-mono-data text-[10px]" style={{ color: "var(--color-nav-text)" }}>
-              Enterprise plan
+              {BILLING_ENABLED ? "Enterprise plan" : "Free plan"}
             </p>
           </div>
+          <button
+            onClick={signOut}
+            aria-label="Sign out"
+            title="Sign out"
+            className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md transition hover:bg-white/10"
+            style={{ color: "var(--color-nav-text)" }}
+          >
+            <LogOut size={14} />
+          </button>
         </div>
       </div>
     </aside>
