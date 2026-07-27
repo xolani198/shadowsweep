@@ -7,6 +7,7 @@ import Button from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
 import SecurityEvents from "@/components/dashboard/SecurityEvents";
 import { INTEGRATIONS, Integration } from "@/lib/data";
+import { BILLING_ENABLED } from "@/lib/config";
 
 const ORG_DEFAULTS = { name: "Acme Corp", email: "admin@acmecorp.io" };
 
@@ -86,7 +87,7 @@ export default function SettingsPage() {
             </Row>
             <Row label="Plan">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--color-accent)] px-3 py-1 text-[11.5px] font-bold text-white">
-                Pro
+                {BILLING_ENABLED ? "Pro" : "Free"}
               </span>
             </Row>
             <Row label="Members">

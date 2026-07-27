@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import Logo from "@/components/layout/Logo";
 import ThemeToggle from "@/components/layout/ThemeToggle";
+import { BILLING_ENABLED } from "@/lib/config";
 
 export default function LegalLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -34,7 +35,9 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
           <div className="flex flex-wrap items-center gap-4 text-[12px]" style={{ color: "var(--color-nav-text)" }}>
             <Link href="/legal/terms" className="hover:text-white">Terms</Link>
             <Link href="/legal/privacy" className="hover:text-white">Privacy</Link>
-            <Link href="/legal/refund" className="hover:text-white">Refunds</Link>
+            {BILLING_ENABLED && (
+              <Link href="/legal/refund" className="hover:text-white">Refunds</Link>
+            )}
           </div>
         </div>
       </footer>

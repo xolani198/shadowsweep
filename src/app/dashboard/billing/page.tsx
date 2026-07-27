@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { CheckCircle2, CreditCard, ExternalLink, Sparkles } from "lucide-react";
 import TopBar from "@/components/layout/TopBar";
 import Badge from "@/components/ui/Badge";
 import { useToast } from "@/components/ui/Toast";
+import { BILLING_ENABLED } from "@/lib/config";
 
 type Interval = "monthly" | "yearly";
 
@@ -73,6 +75,7 @@ export default function BillingPage() {
 
   // Surface the checkout return state and load current subscription.
   useEffect(() => {
+    if (!BILLING_ENABLED) return;
     const params = new URLSearchParams(window.location.search);
     const checkout = params.get("checkout");
     if (checkout === "success") {
@@ -134,6 +137,58 @@ export default function BillingPage() {
   const badge = sub ? statusBadge(sub.status) : null;
   const isActive = sub ? ACTIVE.has(sub.status) : false;
   const notConfigured = sub ? sub.configured === false : false;
+
+  // Billing is switched off: everything is free, so show that plainly instead
+  // of plans and checkout. The page stays reachable so a direct link never 404s.
+  if (!BILLING_ENABLED) {
+    return (
+      <div className="flex flex-col min-h-full">
+        <TopBar title="Billing" subtitle="Plan and payment" />
+        <div className="px-4 py-5 sm:px-6 max-w-3xl space-y-5">
+          <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-accent-subtle)]">
+                <CheckCircle2 size={18} className="text-[var(--color-accent)]" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <p className="text-[15px] font-bold text-[var(--color-text-primary)]">Free plan</p>
+                  <Badge variant="success">Active</Badge>
+                </div>
+                <p className="mt-0.5 text-[13px] text-[var(--color-text-secondary)]">
+                  Every feature is enabled. No card on file, nothing to pay.
+                </p>
+              </div>
+            </div>
+
+            <ul className="mt-5 grid gap-2 sm:grid-cols-2">
+              {[
+                "Unlimited employees monitored",
+                "All integrations",
+                "One-click offboarding",
+                "Compliance email templates",
+                "Full audit log",
+                "Security events and alerts",
+              ].map((f) => (
+                <li key={f} className="flex items-start gap-2 text-[13px] text-[var(--color-text-secondary)]">
+                  <CheckCircle2 size={13} className="mt-0.5 flex-shrink-0 text-[var(--color-accent)]" />
+                  {f}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <p className="text-[12.5px] text-[var(--color-text-muted)]">
+            Paid plans are not enabled yet. If that changes, existing teams get notice first. See the{" "}
+            <Link href="/legal/terms" className="text-[var(--color-accent)] hover:underline">
+              terms
+            </Link>{" "}
+            for details.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-full">

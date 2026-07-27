@@ -3,10 +3,15 @@ import { getSession } from "@/lib/auth";
 import { isSameOrigin } from "@/lib/security";
 import { rateLimit, clientKey } from "@/lib/rateLimit";
 import { getStripe } from "@/lib/stripe";
+import { BILLING_ENABLED } from "@/lib/config";
 
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
+  if (!BILLING_ENABLED) {
+    return NextResponse.json({ error: "Billing is disabled." }, { status: 404 });
+  }
+
   if (!isSameOrigin(request)) {
     return NextResponse.json({ error: "Cross-origin request rejected" }, { status: 403 });
   }

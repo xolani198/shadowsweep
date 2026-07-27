@@ -1,12 +1,17 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { getStripe } from "@/lib/stripe";
+import { BILLING_ENABLED } from "@/lib/config";
 
 export const runtime = "nodejs";
 // Stripe needs the raw, unparsed body to verify the signature.
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
+  if (!BILLING_ENABLED) {
+    return NextResponse.json({ error: "Billing is disabled." }, { status: 404 });
+  }
+
   const stripe = getStripe();
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
