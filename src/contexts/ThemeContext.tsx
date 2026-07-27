@@ -11,6 +11,8 @@ import React, {
 
 type Theme = "light" | "dark";
 
+export const THEME_STORAGE_KEY = "ss-theme";
+
 interface ThemeContextValue {
   theme: Theme;
   toggleTheme: () => void;
@@ -19,31 +21,41 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("light");
+/**
+ * The class on <html> is the source of truth. It is applied before paint by the
+ * bootstrap script in the root layout, so there is no flash of the wrong theme
+ * and nothing needs to be written to storage during mount. Writing on mount is
+ * what previously overwrote a saved preference with the default before it had
+ * been read back.
+ */
+function currentTheme(): Theme {
+  if (typeof document === "undefined") return "light";
+  return document.documentElement.classList.contains("dark") ? "dark" : "light";
+}
 
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setThemeState] = useState<Theme>(currentTheme);
+
+  // The server always renders the light default, so re-read once on the client
+  // to pick up whatever the bootstrap script decided.
   useEffect(() => {
-    const stored = localStorage.getItem("ss-theme") as Theme | null;
-    if (stored === "dark" || stored === "light") {
-      setTheme(stored);
-    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      setTheme("dark");
-    }
+    setThemeState(currentTheme());
   }, []);
 
-  useEffect(() => {
-    const root = document.documentElement;
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
+  const applyTheme = useCallback((next: Theme) => {
+    document.documentElement.classList.toggle("dark", next === "dark");
+    setThemeState(next);
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, next);
+    } catch {
+      // Storage can be unavailable (private mode, blocked cookies). The theme
+      // still applies for this page view.
     }
-    localStorage.setItem("ss-theme", theme);
-  }, [theme]);
+  }, []);
 
   const toggleTheme = useCallback(() => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
-  }, []);
+    applyTheme(currentTheme() === "dark" ? "light" : "dark");
+  }, [applyTheme]);
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, isDark: theme === "dark" }}>

@@ -4,6 +4,7 @@ import { getSession } from "@/lib/auth";
 import { isSameOrigin } from "@/lib/security";
 import { rateLimit, clientKey } from "@/lib/rateLimit";
 import { getStripe, getPriceId, PLAN_CATALOG } from "@/lib/stripe";
+import { BILLING_ENABLED } from "@/lib/config";
 
 export const runtime = "nodejs";
 
@@ -15,6 +16,11 @@ const schema = z
   .strict();
 
 export async function POST(request: Request) {
+  // Billing is switched off: the product is free, so no checkout can start.
+  if (!BILLING_ENABLED) {
+    return NextResponse.json({ error: "Billing is disabled." }, { status: 404 });
+  }
+
   if (!isSameOrigin(request)) {
     return NextResponse.json({ error: "Cross-origin request rejected" }, { status: 403 });
   }

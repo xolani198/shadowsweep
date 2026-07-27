@@ -9,6 +9,7 @@ import {
 import { DEMO_MODE } from "@/lib/config";
 import { rateLimit, clientKey } from "@/lib/rateLimit";
 import { isSameOrigin } from "@/lib/security";
+import { recordAudit, requestContext, redactEmail } from "@/lib/audit";
 
 export const runtime = "nodejs";
 
@@ -64,6 +65,8 @@ export async function POST(request: Request) {
 
   let token: string | null = null;
 
+  const ctx = requestContext(request);
+
   if ("mode" in parsed.data) {
     // Demo sign-in, only available while the demo dataset is enabled.
     if (!DEMO_MODE) {
@@ -73,7 +76,17 @@ export async function POST(request: Request) {
       userId: "demo-user",
       orgId: "demo-org",
       email: "demo@shadowsweep.app",
+      role: "admin",
       demo: true,
+    });
+    recordAudit({
+      action: "login",
+      actor: "demo-user",
+      org: "demo-org",
+      outcome: "success",
+      ip: ctx.ip,
+      userAgent: ctx.userAgent,
+      metadata: { method: "demo" },
     });
   } else {
     // Credential sign-in against the configured admin account.
@@ -88,13 +101,31 @@ export async function POST(request: Request) {
     const emailOk = safeEqual(parsed.data.email.toLowerCase(), adminEmail.toLowerCase());
     const passwordOk = safeEqual(parsed.data.password, adminPassword);
     if (!emailOk || !passwordOk) {
+      recordAudit({
+        action: "login_failed",
+        actor: "anonymous",
+        outcome: "failure",
+        ip: ctx.ip,
+        userAgent: ctx.userAgent,
+        metadata: { email: redactEmail(parsed.data.email) ?? "redacted" },
+      });
       return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
     }
     token = createSessionToken({
       userId: "usr-admin",
       orgId: "org-acme",
       email: parsed.data.email,
+      role: "admin",
       demo: false,
+    });
+    recordAudit({
+      action: "login",
+      actor: "usr-admin",
+      org: "org-acme",
+      outcome: "success",
+      ip: ctx.ip,
+      userAgent: ctx.userAgent,
+      metadata: { method: "credentials" },
     });
   }
 

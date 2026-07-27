@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { isStripeConfigured, getSubscriptionForEmail } from "@/lib/stripe";
+import { BILLING_ENABLED } from "@/lib/config";
 
 export const runtime = "nodejs";
 
@@ -8,6 +9,11 @@ export async function GET() {
   const session = getSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Billing off: report a free plan rather than probing Stripe.
+  if (!BILLING_ENABLED) {
+    return NextResponse.json({ configured: false, billingEnabled: false, status: "free", plan: null });
   }
 
   if (!isStripeConfigured()) {

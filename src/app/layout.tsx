@@ -56,6 +56,11 @@ export const metadata: Metadata = {
   },
 };
 
+// Applies the saved (or system) theme before first paint, so the page never
+// flashes the wrong colours and React never has to write storage during mount.
+// This is a fixed string with no interpolation and no user input.
+const THEME_BOOTSTRAP = `(function(){try{var t=localStorage.getItem('ss-theme');if(t!=='dark'&&t!=='light'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}if(t==='dark'){document.documentElement.classList.add('dark');}}catch(e){}})();`;
+
 export default function RootLayout({
   children,
 }: {
@@ -63,6 +68,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP }} />
+      </head>
       <body>
         <ThemeProvider>
           <ToastProvider>{children}</ToastProvider>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { reportError } from "@/lib/monitoring";
 
 // global-error replaces the root layout, so it must render its own <html>/<body>
 // and cannot depend on the theme CSS variables. Keep it self-contained.
@@ -12,7 +13,7 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("Fatal application error:", error);
+    reportError(error, { where: "app/global-error", digest: error.digest });
   }, [error]);
 
   return (

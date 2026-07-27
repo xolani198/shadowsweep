@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { EMPLOYEES } from "@/lib/data";
+import { BILLING_ENABLED } from "@/lib/config";
 
 interface CommandItem {
   id: string;
@@ -78,7 +79,18 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
       { id: "nav-discovery", label: "Discovery", group: "Navigation", keywords: "integrations apps scan shadow", icon: Search, run: go("/dashboard/discovery") },
       { id: "nav-employees", label: "Employees", group: "Navigation", keywords: "people personnel staff", icon: Users, run: go("/dashboard/employees") },
       { id: "nav-alerts", label: "Alerts", group: "Navigation", keywords: "notifications warnings", icon: Bell, run: go("/dashboard/alerts") },
-      { id: "nav-billing", label: "Billing", group: "Navigation", keywords: "subscription plan payment invoice upgrade", icon: CreditCard, run: go("/dashboard/billing") },
+      ...(BILLING_ENABLED
+        ? [
+            {
+              id: "nav-billing",
+              label: "Billing",
+              group: "Navigation",
+              keywords: "subscription plan payment invoice upgrade",
+              icon: CreditCard,
+              run: go("/dashboard/billing"),
+            },
+          ]
+        : []),
       { id: "nav-settings", label: "Settings", group: "Navigation", keywords: "workspace integrations config", icon: Settings, run: go("/dashboard/settings") },
     ];
     const people: CommandItem[] = EMPLOYEES.map((e) => ({
@@ -131,12 +143,24 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
     setActiveIndex(0);
   }, [query]);
 
-  // Global ⌘K / Ctrl+K to toggle the palette.
+  // Global ⌘K / Ctrl+K to toggle the palette, and Escape to close it. Escape is
+  // handled here as well as on the input so it still works if focus has moved
+  // out of the field.
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         setIsOpen((v) => !v);
+        return;
+      }
+      if (e.key === "Escape") {
+        setIsOpen((wasOpen) => {
+          if (wasOpen) {
+            setQuery("");
+            setActiveIndex(0);
+          }
+          return false;
+        });
       }
     }
     window.addEventListener("keydown", onKey);

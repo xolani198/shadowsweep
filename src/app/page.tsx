@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import ThemeToggle from "@/components/layout/ThemeToggle";
 import Logo from "@/components/layout/Logo";
+import { BILLING_ENABLED } from "@/lib/config";
 
 /* ── Content ─────────────────────────────────────────────────────────────── */
 
@@ -285,7 +286,7 @@ export default function LandingPage() {
             {[
               { label: "Product",   href: "#services" },
               { label: "Why us",    href: "#why-us" },
-              { label: "Pricing",   href: "#pricing" },
+              ...(BILLING_ENABLED ? [{ label: "Pricing", href: "#pricing" }] : []),
               { label: "Live demo", href: "/dashboard" },
             ].map(({ label, href }) => (
               <a
@@ -493,7 +494,36 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
+      {/* ── Free while billing is off ───────────────────────────────────── */}
+      {!BILLING_ENABLED && (
+        <section className="bg-[var(--color-surface-2)] py-20">
+          <motion.div {...sectionReveal} className="mx-auto max-w-2xl px-6 text-center">
+            <p className="micro-label mb-3 !text-[var(--color-accent)]">Pricing</p>
+            <h2 className="text-[28px] font-extrabold tracking-tight">Free while we are in beta</h2>
+            <p className="mx-auto mt-3 max-w-lg text-[13.5px] leading-relaxed text-[var(--color-text-secondary)]">
+              Every feature is available at no cost, with no card required. We will give existing
+              teams notice before that changes.
+            </p>
+            <div className="mt-7 flex flex-wrap justify-center gap-3">
+              <Link
+                href="/auth"
+                className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent)] px-6 py-3 text-[13.5px] font-semibold text-white transition hover:bg-[var(--color-accent-hover)]"
+              >
+                Get started free <ArrowRight size={15} />
+              </Link>
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-2 rounded-lg border border-[var(--color-border-strong)] px-6 py-3 text-[13.5px] font-semibold text-[var(--color-text-primary)] transition hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+              >
+                Open the live demo
+              </Link>
+            </div>
+          </motion.div>
+        </section>
+      )}
+
       {/* ── Pricing ─────────────────────────────────────────────────────── */}
+      {BILLING_ENABLED && (
       <section id="pricing" className="bg-[var(--color-surface-2)] py-20">
         <div className="mx-auto max-w-6xl px-6">
           <motion.div {...sectionReveal} className="mb-10 text-center">
@@ -603,6 +633,7 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* ── CTA band: navy rounded container ────────────────────────────── */}
       <section className="mx-auto max-w-6xl px-6 py-16">
@@ -651,7 +682,9 @@ export default function LandingPage() {
           <div className="flex flex-wrap items-center gap-5 text-[12px]" style={{ color: "var(--color-nav-text)" }}>
             <Link href="/legal/terms" className="hover:text-white">Terms</Link>
             <Link href="/legal/privacy" className="hover:text-white">Privacy</Link>
-            <Link href="/legal/refund" className="hover:text-white">Refunds</Link>
+            {BILLING_ENABLED && (
+              <Link href="/legal/refund" className="hover:text-white">Refunds</Link>
+            )}
           </div>
           <p className="text-[12px]" style={{ color: "var(--color-nav-text)" }}>
             © {new Date().getFullYear()} ShadowSweep · GDPR and CCPA deletion workflows built in

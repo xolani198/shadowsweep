@@ -10,7 +10,11 @@ export function getStripe(): Stripe | null {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) return null;
   if (!cached) {
-    const config: Stripe.StripeConfig = { appInfo: { name: "ShadowSweep" } };
+    const config: Stripe.StripeConfig = {
+      appInfo: { name: "ShadowSweep" },
+      // Stripe automatically retries idempotent requests on transient failures.
+      maxNetworkRetries: 2,
+    };
     // Pin via env if you need a specific version; otherwise use the account default.
     if (process.env.STRIPE_API_VERSION) {
       config.apiVersion = process.env.STRIPE_API_VERSION as Stripe.StripeConfig["apiVersion"];

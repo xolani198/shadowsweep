@@ -11,6 +11,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { METRICS } from "@/lib/data";
+import { BILLING_ENABLED } from "@/lib/config";
 import { useMobileNav } from "@/contexts/MobileNavContext";
 import Logo from "./Logo";
 
@@ -19,7 +20,10 @@ const NAV = [
   { href: "/dashboard/discovery", label: "Discovery", icon: Search },
   { href: "/dashboard/employees", label: "Employees", icon: Users },
   { href: "/dashboard/alerts",    label: "Alerts",    icon: Bell, badge: METRICS.criticalAlerts },
-  { href: "/dashboard/billing",   label: "Billing",   icon: CreditCard },
+  // Billing only appears once billing is switched on.
+  ...(BILLING_ENABLED
+    ? [{ href: "/dashboard/billing", label: "Billing", icon: CreditCard }]
+    : []),
   { href: "/dashboard/settings",  label: "Settings",  icon: Settings },
 ];
 
@@ -109,7 +113,7 @@ export default function Sidebar() {
               Acme Corp
             </p>
             <p className="truncate font-mono-data text-[10px]" style={{ color: "var(--color-nav-text)" }}>
-              Enterprise plan
+              {BILLING_ENABLED ? "Enterprise plan" : "Free plan"}
             </p>
           </div>
           <button
