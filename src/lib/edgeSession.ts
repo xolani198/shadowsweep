@@ -5,11 +5,17 @@
 
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
 
+// Keep in sync with SESSION_VERSION in lib/auth.ts. Sessions below this version
+// are rejected on both runtimes so an outdated cookie is re-issued rather than
+// silently reinterpreted.
+const SESSION_VERSION = 1;
+
 interface EdgeSession {
   userId: string;
   orgId: string;
   email?: string;
   role?: "admin" | "viewer";
+  v?: number;
   demo?: boolean;
   exp?: number;
 }
@@ -51,12 +57,13 @@ async function signPayload(payload: string, secret: string): Promise<string> {
 }
 
 export async function createEdgeSessionToken(
-  session: Omit<EdgeSession, "exp">,
+  session: Omit<EdgeSession, "exp" | "v">,
   secret: string,
   maxAgeSeconds: number = SESSION_MAX_AGE_SECONDS
 ): Promise<string> {
   const withExp: EdgeSession = {
     ...session,
+    v: SESSION_VERSION,
     exp: Math.floor(Date.now() / 1000) + maxAgeSeconds,
   };
   const payload = base64urlEncode(new TextEncoder().encode(JSON.stringify(withExp)));
@@ -86,6 +93,7 @@ export async function verifyEdgeSession(token: string, secret: string): Promise<
     const parsed = JSON.parse(new TextDecoder().decode(base64urlToBytes(payload))) as EdgeSession;
     if (typeof parsed.userId !== "string" || typeof parsed.orgId !== "string") return null;
     if (typeof parsed.exp === "number" && Date.now() / 1000 > parsed.exp) return null;
+    if ((parsed.v ?? 0) < SESSION_VERSION) return null; // outdated schema
     return parsed;
   } catch {
     return null;

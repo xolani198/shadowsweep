@@ -3,9 +3,10 @@ import { test, expect } from "@playwright/test";
 
 const TEST_SESSION_SECRET = "playwright-e2e-secret-not-for-production";
 
+// v mirrors SESSION_VERSION in src/lib/auth.ts.
 function signedCookie(role: "admin" | "viewer"): string {
   const payload = Buffer.from(
-    JSON.stringify({ userId: "usr-e2e", orgId: "org-acme", role })
+    JSON.stringify({ userId: "usr-e2e", orgId: "org-acme", role, v: 1 })
   ).toString("base64url");
   const sig = createHmac("sha256", TEST_SESSION_SECRET).update(payload).digest("base64url");
   return `ss_session=${payload}.${sig}`;

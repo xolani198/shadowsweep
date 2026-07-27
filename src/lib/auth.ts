@@ -8,6 +8,16 @@ export const SESSION_COOKIE = "ss_session";
 export const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
 
 /**
+ * Session schema version. Bump whenever a claim becomes security-relevant so
+ * older cookies stop validating instead of being silently reinterpreted.
+ * Version 1 introduced the `role` claim: a pre-v1 cookie has no role, and
+ * treating it as a viewer would leave existing users stuck on 403s. Rejecting
+ * it instead means the session is cleanly re-issued (demo) or the user signs
+ * in again.
+ */
+export const SESSION_VERSION = 1;
+
+/**
  * Authorization roles. `admin` can perform destructive actions (revoke,
  * offboard); `viewer` is read-only. Least privilege: anything that is not
  * explicitly `admin` is treated as `viewer`.
@@ -19,6 +29,8 @@ export interface Session {
   orgId: string;
   email?: string;
   role: Role;
+  /** Session schema version; sessions below SESSION_VERSION are rejected. */
+  v?: number;
   /** Demo sessions (issued for the public marketing demo) are flagged. */
   demo?: boolean;
   /** Unix epoch seconds after which the session is invalid. */
@@ -44,13 +56,14 @@ function sign(payload: string, secret: string): string {
  * Returns null when SESSION_SECRET is not configured.
  */
 export function createSessionToken(
-  session: Omit<Session, "exp">,
+  session: Omit<Session, "exp" | "v">,
   maxAgeSeconds: number = SESSION_MAX_AGE_SECONDS
 ): string | null {
   const secret = process.env.SESSION_SECRET;
   if (!secret) return null;
   const withExp: Session = {
     ...session,
+    v: SESSION_VERSION,
     exp: Math.floor(Date.now() / 1000) + maxAgeSeconds,
   };
   const payload = Buffer.from(JSON.stringify(withExp)).toString("base64url");
@@ -102,11 +115,15 @@ export function getSession(): Session | null {
       if (typeof session.exp === "number" && Date.now() / 1000 > session.exp) {
         return null; // expired
       }
+      if ((session.v ?? 0) < SESSION_VERSION) {
+        return null; // outdated schema; force a clean re-issue
+      }
       return {
         userId: session.userId,
         orgId: session.orgId,
         email: typeof session.email === "string" ? session.email : undefined,
         role: normalizeRole(session.role),
+        v: session.v,
         demo: session.demo === true,
         exp: session.exp,
       };

@@ -4,9 +4,10 @@ import { test, expect } from "@playwright/test";
 // Must match the SESSION_SECRET the Playwright webServer starts the dev server with.
 const TEST_SESSION_SECRET = "playwright-e2e-secret-not-for-production";
 
+// v mirrors SESSION_VERSION in src/lib/auth.ts.
 function signedSessionCookie(overrides: Record<string, unknown> = {}): string {
   const payload = Buffer.from(
-    JSON.stringify({ userId: "usr-e2e", orgId: "org-acme", role: "admin", ...overrides })
+    JSON.stringify({ userId: "usr-e2e", orgId: "org-acme", role: "admin", v: 1, ...overrides })
   ).toString("base64url");
   const signature = createHmac("sha256", TEST_SESSION_SECRET)
     .update(payload)
@@ -73,6 +74,16 @@ test.describe("offboard API authorization & validation", () => {
     expect(body.employeeId).toBe("emp-001");
     expect(body.revokedApps).toContain("Figma");
     expect(body.auditLogId).toBeTruthy();
+  });
+
+  test("rejects outdated session cookies with 401 (pre-role schema)", async ({ request }) => {
+    // A cookie minted before the role claim existed must not be reinterpreted
+    // as a viewer; it is rejected so the session is cleanly re-issued.
+    const res = await request.post("/api/offboard", {
+      headers: { Cookie: signedSessionCookie({ v: undefined, role: undefined }) },
+      data: { employeeId: "emp-001", scope: "shadow" },
+    });
+    expect(res.status()).toBe(401);
   });
 
   test("rejects expired session cookies with 401", async ({ request }) => {
