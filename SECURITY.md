@@ -49,10 +49,12 @@ Revoking access cannot happen on an accidental click.
 | `/api/audit` | GET | session + **admin role** |
 | `/api/auth/login` | POST | origin + rate-limit + audit (public by design) |
 | `/api/auth/logout` | POST | origin + audit (public by design) |
-| `/api/stripe/checkout` | POST | session + origin + rate-limit |
-| `/api/stripe/portal` | POST | session + origin + rate-limit |
-| `/api/stripe/subscription` | GET | session |
-| `/api/stripe/webhook` | POST | Stripe signature verification (public by design) |
+| `/api/stripe/checkout` | POST | **404 while billing is off**, then session + origin + rate-limit |
+| `/api/stripe/portal` | POST | **404 while billing is off**, then session + origin + rate-limit |
+| `/api/stripe/subscription` | GET | session (reports a free plan while billing is off) |
+| `/api/stripe/webhook` | POST | **404 while billing is off**, then Stripe signature verification |
+
+Billing is disabled by default (`NEXT_PUBLIC_BILLING_ENABLED`), so the four payment endpoints refuse to run and no card data or Stripe traffic is involved at all. Nothing in the product is gated on a subscription.
 
 The middleware intentionally does not match `/api/*`, so API routes always enforce their own checks and fail closed even if the edge layer is bypassed.
 

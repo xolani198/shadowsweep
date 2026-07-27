@@ -21,6 +21,8 @@ The app fails closed without this.
 
 ## 2. Stripe, to accept payments (~30 to 45 min)
 
+> **Skip this section for now.** The app ships free: `NEXT_PUBLIC_BILLING_ENABLED` defaults to `false`, so there is no pricing, no checkout, and the Stripe endpoints refuse to run. Nothing here is needed to launch. Come back when you want to charge, set that variable to `true`, and work through the steps below.
+
 ### 2a. Create the account
 1. Sign up at https://dashboard.stripe.com. Start in Test mode (toggle, top-right).
 2. You do not need to finish business verification to test with `sk_test_…` keys, but you do need it before charging real cards in live mode (see 2f).
@@ -91,7 +93,9 @@ The app fails closed without this.
 
 ---
 
-## 5. Business and legal for taking payments (varies, get counsel)
+## 5. Business and legal (varies, get counsel)
+
+> While the product is free, the payment-specific items (Stripe verification, refund policy, sales tax) do not apply yet. The Terms and Privacy Policy still do, because you are collecting user data.
 
 The app ships template Terms, Privacy, and Refund pages at `/legal/terms`, `/legal/privacy`, `/legal/refund`. Before charging real customers:
 1. Have a lawyer review and customize all three to your actual entity, data practices, and jurisdiction. The templates are a starting point, not legal advice.
@@ -114,13 +118,20 @@ So your outreach lands in inboxes instead of spam, authenticate your sending dom
 
 ## 7. Final pre-launch checks
 
-- [ ] `SESSION_SECRET` set in Vercel (Production and Preview).
-- [ ] Stripe test checkout completes end to end on the preview URL (use test card `4242 4242 4242 4242`).
-- [ ] Stripe webhook shows successful deliveries (Stripe, then Webhooks, then your endpoint, then recent events).
+Launching free, so only these apply:
+
+- [ ] `SESSION_SECRET` set in Vercel (Production and Preview). This is the one required value.
 - [ ] Custom domain resolves with valid SSL.
 - [ ] `NEXT_PUBLIC_SITE_URL` matches the live domain; OG preview renders (test at https://www.opengraph.xyz).
-- [ ] Legal pages reviewed by counsel.
-- [ ] SPF, DKIM, DMARC pass (mail-tester score 10/10).
+- [ ] Terms and Privacy reviewed by counsel.
+- [ ] SPF, DKIM, DMARC pass (mail-tester score 10/10) before any outreach.
+
+Only when you later turn billing on:
+
+- [ ] `NEXT_PUBLIC_BILLING_ENABLED=true` plus the `STRIPE_*` values.
+- [ ] Stripe test checkout completes end to end on the preview URL (test card `4242 4242 4242 4242`).
+- [ ] Stripe webhook shows successful deliveries (Stripe, then Webhooks, then your endpoint, then recent events).
+- [ ] Refund policy reviewed; Stripe business verification complete.
 - [ ] Switched Stripe to live keys only when ready to charge real money.
 
 ---
