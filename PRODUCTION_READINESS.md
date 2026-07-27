@@ -36,60 +36,61 @@ Every P0 and P1 item below is **resolved in code** on the `production-ready` bra
 ## P0: Blocks launch
 
 ### Security & auth
-- ☐ **`/dashboard/*` is completely unprotected.** No `middleware.ts`; all dashboard pages prerender as static (`○` in build output). Anyone can read the product without authenticating. → Add edge middleware gating `/dashboard` on a valid session, redirect to `/auth`.
-- ☐ **Login is fake.** `src/app/auth/page.tsx` runs `setTimeout(() => window.location.href = "/dashboard", 1500)` and never sets the `ss_session` cookie. The HMAC session machinery in `src/lib/auth.ts` is therefore never exercised by the UI, the offboard API can never be called successfully from the app. → Add a real login route that issues a signed, `HttpOnly` + `Secure` + `SameSite` cookie; wire a "demo sign-in" for the marketing demo.
-- ☐ **No sign-out.** No way to clear a session.
-- ☐ **Session cookie has no expiry / issued-at.** `Session` payload is `{ userId, orgId }` only, sessions never expire and can't be revoked by age. → Add `exp` and reject expired sessions.
+- ☑ **`/dashboard/*` is completely unprotected.** No `middleware.ts`; all dashboard pages prerender as static (`○` in build output). Anyone can read the product without authenticating. → Add edge middleware gating `/dashboard` on a valid session, redirect to `/auth`.
+- ☑ **Login is fake.** `src/app/auth/page.tsx` runs `setTimeout(() => window.location.href = "/dashboard", 1500)` and never sets the `ss_session` cookie. The HMAC session machinery in `src/lib/auth.ts` is therefore never exercised by the UI, the offboard API can never be called successfully from the app. → Add a real login route that issues a signed, `HttpOnly` + `Secure` + `SameSite` cookie; wire a "demo sign-in" for the marketing demo.
+- ☑ **No sign-out.** No way to clear a session.
+- ☑ **Session cookie has no expiry / issued-at.** `Session` payload is `{ userId, orgId }` only, sessions never expire and can't be revoked by age. → Add `exp` and reject expired sessions.
 
 ### Payments
-- ☐ **No payment integration of any kind.** Pricing CTAs link to `/auth`. No Stripe, no checkout, no billing portal, no webhooks, no subscription gating. This blocks "accept payments." → Phase 4.
+- ☑ **No payment integration of any kind.** Pricing CTAs link to `/auth`. No Stripe, no checkout, no billing portal, no webhooks, no subscription gating. This blocks "accept payments." → Phase 4.
 
 ### Routing robustness
-- ☐ **No `not-found.tsx`, no `error.tsx`, no `global-error.tsx`, no `loading.tsx`.** An unhandled render error shows the raw Next default; there is no branded 404/500 and no error boundary. → Phase 2.
+- ☑ **No `not-found.tsx`, no `error.tsx`, no `global-error.tsx`, no `loading.tsx`.** An unhandled render error shows the raw Next default; there is no branded 404/500 and no error boundary. → Phase 2.
 
 ---
 
 ## P1: Fix before scaling outbound
 
 ### Technical correctness / dead or non-functional UI
-- ☐ **Settings form does nothing.** Org name / admin email are uncontrolled `defaultValue` inputs with no save action; integration toggles mutate local state only and are lost on reload. → Add a working save with toast + persistence (demo: client/localStorage; real: API stub).
-- ☐ **Offboard happens only client-side.** `employee/[id]` "Revoke All Access" is a pure 7-step CSS animation; it never calls `POST /api/offboard`. The real authorized API exists but is unused by the UI. → Wire the button to the API (with the demo session).
-- ☐ **Decorative buttons that do nothing:** landing "Watch the Demo" (no video/modal), case-study `ChevronLeft/Right` carousel arrows, "Read Full Case Study". → Make functional or remove.
-- ☐ **Terms / Privacy are dead `<span>`s.** `auth/page.tsx` references ToS & Privacy with `cursor-pointer` but no `href`; the pages don't exist. Required for taking payments. → Add `/legal/terms`, `/legal/privacy`, `/legal/refund`.
-- ☐ **TopBar "Search…" is a non-functional placeholder** (a `<span>`, not an input). Brief asks for a ⌘K command palette. → Phase 1.
-- ☐ **Dead code:** `SEVERITY_ICONS` (+ `Zap`, `Info` imports) in `alerts/page.tsx` is declared and never used; `Clock`/`XCircle` imported but unused in `discovery/page.tsx`. ESLint `core-web-vitals` doesn't flag these; "no dead code" still requires cleanup.
+- ☑ **Settings form does nothing.** Org name / admin email are uncontrolled `defaultValue` inputs with no save action; integration toggles mutate local state only and are lost on reload. → Add a working save with toast + persistence (demo: client/localStorage; real: API stub).
+- ☑ **Offboard happens only client-side.** `employee/[id]` "Revoke All Access" is a pure 7-step CSS animation; it never calls `POST /api/offboard`. The real authorized API exists but is unused by the UI. → Wire the button to the API (with the demo session).
+- ☑ **Decorative buttons that do nothing:** landing "Watch the Demo" (no video/modal), case-study `ChevronLeft/Right` carousel arrows, "Read Full Case Study". → Make functional or remove.
+- ☑ **Terms / Privacy are dead `<span>`s.** `auth/page.tsx` references ToS & Privacy with `cursor-pointer` but no `href`; the pages don't exist. Required for taking payments. → Add `/legal/terms`, `/legal/privacy`, `/legal/refund`.
+- ☑ **TopBar "Search…" is a non-functional placeholder** (a `<span>`, not an input). Brief asks for a ⌘K command palette. → Phase 1.
+- ☑ **Dead code:** `SEVERITY_ICONS` (+ `Zap`, `Info` imports) in `alerts/page.tsx` is declared and never used; `Clock`/`XCircle` imported but unused in `discovery/page.tsx`. ESLint `core-web-vitals` doesn't flag these; "no dead code" still requires cleanup.
 
 ### Auth / data
-- ☐ **Data is 100% hardcoded mock with no demo/real flag.** `src/lib/mockData.ts` is imported directly by pages. Brief wants demo data behind a flag so marketing works while the app is wired for real integrations. → Introduce a data-source seam + `NEXT_PUBLIC_DEMO_MODE`.
-- ☐ **Offboard API has no rate limiting.** Brief explicitly requires it. → Add a lightweight per-IP/session limiter.
-- ☐ **`.env.example` documents only `SESSION_SECRET`.** Needs Stripe keys, app URL, demo flag, etc. → Expand + document in README.
+- ☑ **Data is 100% hardcoded mock with no demo/real flag.** `src/lib/mockData.ts` is imported directly by pages. Brief wants demo data behind a flag so marketing works while the app is wired for real integrations. → Introduce a data-source seam + `NEXT_PUBLIC_DEMO_MODE`.
+- ☑ **Offboard API has no rate limiting.** Brief explicitly requires it. → Add a lightweight per-IP/session limiter.
+- ☑ **`.env.example` documents only `SESSION_SECRET`.** Needs Stripe keys, app URL, demo flag, etc. → Expand + document in README.
 
 ### Accessibility
-- ☐ **Sortable table headers are `<th onClick>`** (discovery), not keyboard-operable and no `aria-sort`. → Use buttons + `aria-sort`.
-- ☐ **ToS/Privacy spans** aren't focusable/operable by keyboard (become real links).
-- ☐ **No skip-to-content link**; dashboard has no landmark `<main>` labelling beyond the element.
-- ☐ **Risk conveyed by color + a tiny dot**; ensure text label always present (mostly OK via `Badge`, verify contrast in dark mode).
+- ☑ **Sortable table headers are `<th onClick>`** (discovery), not keyboard-operable and no `aria-sort`. → Use buttons + `aria-sort`.
+- ☑ **ToS/Privacy spans** aren't focusable/operable by keyboard (become real links).
+- ☑ **No skip-to-content link**; dashboard has no landmark `<main>` labelling beyond the element.
+- ☑ **Risk conveyed by color + a tiny dot**; ensure text label always present (mostly OK via `Badge`, verify contrast in dark mode).
 
 ### SEO / marketing meta
-- ☐ **Emoji data-URI favicon** (a magnifying-glass glyph), not enterprise-credible; no real `favicon.ico`/PNG/apple-touch-icon.
-- ☐ **No OpenGraph or Twitter card, no `metadataBase`, no canonical, no per-page titles.** Links shared in outreach render with no preview card.
-- ☐ **No `robots.txt`, no `sitemap.xml`.**
-- ☐ **No social preview image (OG card).**
+- ☑ **Emoji data-URI favicon** (a magnifying-glass glyph), not enterprise-credible; no real `favicon.ico`/PNG/apple-touch-icon.
+- ☑ **No OpenGraph or Twitter card, no `metadataBase`, no canonical, no per-page titles.** Links shared in outreach render with no preview card.
+- ☑ **No `robots.txt`, no `sitemap.xml`.**
+- ☑ **No social preview image (OG card).**
 
 ### Responsiveness
-- ☐ **Dashboard sidebar is a fixed `w-56` always-on column** with no mobile collapse/hamburger; on small screens it eats ~224px and there's no toggle. Brief requires "fully responsive down to mobile." → Add a responsive drawer.
+- ☑ **Dashboard sidebar is a fixed `w-56` always-on column** with no mobile collapse/hamburger; on small screens it eats ~224px and there's no toggle. Brief requires "fully responsive down to mobile." → Add a responsive drawer.
 
 ---
 
 ## P2: Polish
 
-- ☐ **Fonts loaded via CSS `@import` from Google Fonts** (render-blocking, layout-shift risk). → Migrate to `next/font` (self-hosted, no CLS, better Lighthouse) and drop the `googleapis`/`gstatic` CSP/font allowances.
-- ☐ **No KPI sparklines / trend visuals** beyond static sub-text deltas (brief asks for sparklines/trend deltas).
-- ☐ **`EMPLOYEES.sort(...)` mutates the shared array in render** (`dashboard/page.tsx` "Top Shadow Spenders"), in-place sort on the imported module array; works now but is a latent ordering bug. → Sort a copy.
-- ☐ **Empty states missing** on Employees and Alerts tables (Discovery has one).
-- ☐ **CSP allows `script-src 'unsafe-inline'`** (documented as required for Next hydration without a nonce strategy). Acceptable for launch; revisit with a nonce middleware later.
-- ☐ **No analytics / error monitoring** (e.g., Vercel Analytics + a Sentry stub) for post-launch visibility.
-- ☐ **`metadataBase` + absolute OG URLs** depend on a configured site URL env.
+- ☑ **Fonts loaded via CSS `@import` from Google Fonts** (render-blocking, layout-shift risk). → Migrate to `next/font` (self-hosted, no CLS, better Lighthouse) and drop the `googleapis`/`gstatic` CSP/font allowances.
+- ☑ **No KPI sparklines / trend visuals** beyond static sub-text deltas (brief asks for sparklines/trend deltas).
+- ☑ **`EMPLOYEES.sort(...)` mutates the shared array in render** (`dashboard/page.tsx` "Top Shadow Spenders"), in-place sort on the imported module array; works now but is a latent ordering bug. → Sort a copy.
+- ☑ **Empty states missing** on Employees and Alerts tables (Discovery has one).
+- ☐ **CSP allows `script-src 'unsafe-inline'`** (required by Next hydration without a nonce strategy, and by the theme bootstrap script). Knowingly accepted for launch; revisit with a nonce middleware later.
+- ☑ **Error monitoring**: `reportError` logs structured JSON and forwards to `MONITORING_WEBHOOK_URL` when set; the error boundaries report through it.
+- ☐ **No analytics** (Vercel Analytics or Plausible) for post-launch traffic visibility. Optional, not a blocker.
+- ☑ **`metadataBase` + absolute OG URLs** depend on a configured site URL env.
 
 ---
 

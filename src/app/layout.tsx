@@ -72,6 +72,13 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP }} />
       </head>
       <body>
+        {/* Keyboard users can jump past the navigation. Hidden until focused. */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-lg focus:bg-[var(--color-accent)] focus:px-4 focus:py-2 focus:text-[13px] focus:font-semibold focus:text-white"
+        >
+          Skip to main content
+        </a>
         <ThemeProvider>
           <ToastProvider>{children}</ToastProvider>
         </ThemeProvider>

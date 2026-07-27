@@ -24,7 +24,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
         </div>
       </nav>
 
-      <main className="mx-auto max-w-3xl px-6 py-14">{children}</main>
+      <main id="main-content" className="mx-auto max-w-3xl px-6 py-14">{children}</main>
 
       <footer
         className="mt-10"

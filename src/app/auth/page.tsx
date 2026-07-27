@@ -67,7 +67,10 @@ export default function AuthPage() {
         <ThemeToggle />
       </div>
 
-      <div className="w-full max-w-[380px] rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-8 shadow-sm">
+      <main
+        id="main-content"
+        className="w-full max-w-[380px] rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-8 shadow-sm"
+      >
         {/* Logo */}
         <div className="mb-6 flex flex-col items-center gap-3 text-center">
           <Logo showText={false} size={48} />
@@ -197,7 +200,7 @@ export default function AuthPage() {
           <ArrowLeft size={12} />
           Back to home
         </Link>
-      </div>
+      </main>
     </div>
   );
 }

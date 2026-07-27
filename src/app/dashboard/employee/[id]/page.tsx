@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useParams } from "next/navigation";
+import { useParams, notFound } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -301,15 +301,11 @@ export default function EmployeeProfilePage() {
       .catch(() => toast({ variant: "error", title: "Undo failed", description: "Could not reverse the action." }));
   }
 
+  // Show the standard 404 page rather than a bespoke message. This is a client
+  // component, so the response status stays 200; that is fine here because the
+  // route sits behind auth and is excluded from indexing.
   if (!employee) {
-    return (
-      <div className="flex flex-col min-h-full">
-        <TopBar title="Employee Not Found" />
-        <div className="flex flex-1 items-center justify-center text-[var(--color-text-muted)]">
-          <p>Employee ID <span className="font-mono-data">{id}</span> does not exist.</p>
-        </div>
-      </div>
-    );
+    notFound();
   }
 
   const shadowTotal = employee.shadowApps.reduce((s, a) => s + a.monthlySpend, 0);

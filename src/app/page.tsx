@@ -311,6 +311,8 @@ export default function LandingPage() {
         </div>
       </nav>
 
+      <main id="main-content">
+
       {/* ── Hero: copy left, product mockup right ───────────────────────── */}
       <section className="mx-auto grid max-w-6xl items-center gap-12 px-6 pb-20 pt-32 lg:grid-cols-2">
         <motion.div
@@ -676,6 +678,8 @@ export default function LandingPage() {
       </section>
 
       {/* ── Footer ──────────────────────────────────────────────────────── */}
+      </main>
+
       <footer style={{ background: "var(--color-nav-bg)", borderTop: "1px solid var(--color-nav-border)" }}>
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-8">
           <Logo size={24} textClassName="text-white" />
